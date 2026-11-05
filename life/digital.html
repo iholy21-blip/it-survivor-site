@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>나의 디지털 생활, 몇 점일까요?</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="나의 디지털 생활, 몇 점일까요?">
+<meta property="og:description" content="스마트폰·사기 대처 등 4영역 12문항, 이번 달 할 일 안내">
+<!-- og:image, og:url 은 배포 주소가 정해지면 절대 주소로 추가 -->
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="../assets/fonts.css">
+<link rel="stylesheet" href="../assets/app.css">
+</head>
+<body>
+<div class="app" data-app="digital">
+
+  <section id="introView">
+    <div class="hero">
+      <img src="../img/digital.jpg" alt="창가 나무 탁자에서 휴대폰을 든 손, 옆에 찻잔과 돋보기안경">
+      <div class="hero-text gutter">
+        <span class="eyebrow">50·60을 위한 디지털 생활 점검</span>
+        <h1 class="title">나의 디지털 생활, 몇 점일까요?</h1>
+        <p class="subtitle">휴대폰 · 결제·주문 · 사기 대처 · 정보 찾기</p>
+      </div>
+    </div>
+    <div class="intro-body gutter">
+      <div class="card">
+        <p>질문 12개에 버튼으로 답하면 네 가지 영역의 디지털 생활 점수를 보여 드립니다. 3분이면 끝납니다.</p>
+        <div class="chips c3" style="margin-top: 16px; grid-template-columns: repeat(2, 1fr)" aria-label="점검하는 네 영역">
+          <div>휴대폰<small>글자·사진·백업</small></div><div>결제·주문<small>은행 앱·키오스크</small></div>
+          <div>사기 대처<small>문자·전화</small></div><div>정보 찾기<small>검색·예약</small></div>
+        </div>
+        <p style="margin-top: 16px">점수가 낮아도 괜찮습니다. 결과에는 <b>지금 잘하고 있는 것</b>과 <b>이번 달에 해 볼 일 하나</b>가 나옵니다.</p>
+      </div>
+      <p class="note">부모님께 보내 드려도 좋아요. 답한 내용은 어디에도 저장되지 않습니다.</p>
+    </div>
+    <div class="spacer"></div>
+    <div class="dock gutter"><div class="inner">
+      <button type="button" class="btn" id="startBtn">점검 시작하기</button>
+    </div></div>
+  </section>
+
+  <section id="quizView" hidden>
+    <div class="appbar gutter">
+      <button type="button" class="icon-btn" id="backBtn" aria-label="이전 질문">←</button>
+      <div class="progress"><i id="prog"></i></div>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="qcard gutter" id="qcard">
+      <div class="eyebrow" id="qNum"></div>
+      <h2 class="qtext" id="qText"></h2>
+      <div class="opts" id="opts"></div>
+    </div>
+    <div class="spacer"></div>
+  </section>
+
+  <section id="resultView" hidden>
+    <div class="result gutter">
+      <div class="rcard rise">
+        <div class="lbl">나의 디지털 생활 점수</div>
+        <div class="big"><span id="totalNum">0</span><small> / 100</small></div>
+        <div class="pill" id="stage"></div>
+        <div class="mini" id="mini"></div>
+      </div>
+      <div class="card rise" style="animation-delay: .08s">
+        <h2>지금 나의 위치</h2>
+        <p id="stageText"></p>
+      </div>
+      <div class="card rise" style="animation-delay: .16s">
+        <h2>지금 잘하고 있는 것</h2>
+        <p id="goodText"></p>
+      </div>
+      <div class="card todo rise" style="animation-delay: .24s">
+        <h2>이번 달에 해 볼 일 하나</h2>
+        <p id="nextText"></p>
+      </div>
+      <p class="note" style="text-align: center">참고용 점검입니다. 사기가 의심되면 112, 의심 문자 상담은 118, 금융 상담은 금융감독원 1332입니다.</p>
+    </div>
+    <div class="spacer"></div>
+    <div class="dock gutter"><div class="inner">
+      <button type="button" class="btn sub" id="againBtn">다시 하기</button>
+      <button type="button" class="btn" id="copyBtn">결과 복사해서 보내기</button>
+    </div></div>
+  </section>
+
+  <div class="toast" id="toast" role="status" hidden></div>
+</div>
+<script src="../assets/maker.js"></script>
+<script src="../assets/quiz.js"></script>
+<script src="tests/digital.js"></script>
+</body>
+</html>

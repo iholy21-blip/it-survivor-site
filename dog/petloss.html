@@ -1,0 +1,640 @@
+<!DOCTYPE html>
+<html lang="ko">
+<meta charset="utf-8">
+<title>지금 내 마음, 어디쯤일까</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="지금 내 마음, 어디쯤일까">
+<meta property="og:description" content="지난 2주의 마음을 돌아보는 질문 (진단이 아닌 참고용)">
+<!-- og:image, og:url 은 배포 주소가 정해지면 절대 주소로 추가 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root {
+    --ground: #FBF6F3;
+    --surface: #FFFDFB;
+    --ink: #33383B;
+    --muted: #6E7479;
+    --faint: #A7ACA9;
+    --line: #EFE3DC;
+    --accent: #B4532A;
+    --accent-deep: #8A3D1E;
+    --accent-soft: #FCEEE7;
+    --track-a: #F6D5C5;
+    --track-b: #B4532A;
+    --shadow: 0 1px 2px rgba(51,56,59,.04), 0 10px 30px rgba(51,56,59,.06);
+  }
+  :root:not([data-theme="light"]) {
+    @media (prefers-color-scheme: dark) {
+      --ground: #1B1E20;
+      --surface: #24282A;
+      --ink: #E5E7E3;
+      --muted: #9BA1A0;
+      --faint: #6A706F;
+      --line: #333839;
+      --accent: #E8946C;
+      --accent-deep: #F0A985;
+      --accent-soft: #3A2820;
+      --track-a: #45302A;
+      --track-b: #E8946C;
+      --shadow: 0 1px 2px rgba(0,0,0,.2), 0 12px 34px rgba(0,0,0,.28);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #1B1E20;
+    --surface: #24282A;
+    --ink: #E5E7E3;
+    --muted: #9BA1A0;
+    --faint: #6A706F;
+    --line: #333839;
+    --accent: #E8946C;
+    --accent-deep: #F0A985;
+    --accent-soft: #3A2820;
+    --track-a: #45302A;
+    --track-b: #E8946C;
+    --shadow: 0 1px 2px rgba(0,0,0,.2), 0 12px 34px rgba(0,0,0,.28);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: 'Pretendard', 'Apple SD Gothic Neo', 'Malgun Gothic', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.72;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 32px 20px;
+  }
+
+  .stage {
+    width: 100%;
+    max-width: 540px;
+  }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    padding: 40px 34px;
+  }
+
+  /* transitions */
+  .fade { opacity: 1; transition: opacity .34s ease; }
+  .fade.out { opacity: 0; }
+  @media (prefers-reduced-motion: reduce) {
+    .fade { transition: none; }
+  }
+
+  /* typography */
+  .eyebrow {
+    font-size: 12.5px;
+    letter-spacing: .14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    font-weight: 600;
+    margin: 0 0 18px;
+  }
+  h1 {
+    font-size: clamp(26px, 6vw, 33px);
+    font-weight: 600;
+    line-height: 1.32;
+    letter-spacing: -.01em;
+    margin: 0 0 18px;
+    text-wrap: balance;
+  }
+  .lede {
+    color: var(--muted);
+    font-size: 16px;
+    margin: 0 0 30px;
+  }
+  .lede strong { color: var(--ink); font-weight: 600; }
+
+  /* name field */
+  .field { margin: 0 0 26px; }
+  .field label {
+    display: block;
+    font-size: 14px;
+    color: var(--muted);
+    margin: 0 0 8px;
+  }
+  .field input {
+    width: 100%;
+    font: inherit;
+    font-size: 16px;
+    color: var(--ink);
+    background: var(--ground);
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    padding: 13px 15px;
+  }
+  .field input::placeholder { color: var(--faint); }
+  .field input:focus {
+    outline: none;
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-soft);
+  }
+
+  /* buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font: inherit;
+    font-size: 16px;
+    font-weight: 600;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 13px;
+    padding: 15px 24px;
+    width: 100%;
+    cursor: pointer;
+    transition: background .2s ease, transform .1s ease;
+  }
+  .btn:hover { background: var(--accent-deep); }
+  .btn:active { transform: translateY(1px); }
+  .btn:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 2px; }
+  .btn.ghost {
+    color: var(--muted);
+    background: transparent;
+    width: auto;
+    padding: 8px 4px;
+    font-weight: 500;
+    font-size: 14.5px;
+  }
+  .btn.ghost:hover { color: var(--ink); background: transparent; }
+
+  /* progress */
+  .top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin: 0 0 26px;
+  }
+  .whom { font-size: 13.5px; color: var(--faint); }
+  .count { font-size: 13.5px; color: var(--muted); font-variant-numeric: tabular-nums; }
+  .bar {
+    height: 4px;
+    background: var(--line);
+    border-radius: 99px;
+    overflow: hidden;
+    margin: 0 0 30px;
+  }
+  .bar > i {
+    display: block;
+    height: 100%;
+    background: var(--accent);
+    border-radius: 99px;
+    width: 0;
+    transition: width .4s cubic-bezier(.4,0,.2,1);
+  }
+  @media (prefers-reduced-motion: reduce) { .bar > i { transition: none; } }
+
+  .q {
+    font-size: clamp(20px, 4.8vw, 23px);
+    font-weight: 600;
+    line-height: 1.5;
+    letter-spacing: -.01em;
+    margin: 0 0 28px;
+    text-wrap: balance;
+    min-height: 2.2em;
+  }
+
+  .opts { display: flex; flex-direction: column; gap: 10px; }
+  .opt {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    font: inherit;
+    font-size: 16px;
+    text-align: left;
+    color: var(--ink);
+    background: var(--surface);
+    border: 1.5px solid var(--line);
+    border-radius: 13px;
+    padding: 15px 17px;
+    cursor: pointer;
+    transition: border-color .16s ease, background .16s ease;
+  }
+  .opt:hover { border-color: var(--accent); background: var(--accent-soft); }
+  .opt:focus-visible { outline: 3px solid var(--accent-soft); outline-offset: 1px; }
+  .opt .dot {
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    border: 2px solid var(--faint);
+    flex: none;
+    transition: border-color .16s ease, background .16s ease;
+  }
+  .opt.sel { border-color: var(--accent); background: var(--accent-soft); }
+  .opt.sel .dot { border-color: var(--accent); background: var(--accent); box-shadow: inset 0 0 0 3px var(--surface); }
+
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin: 30px 0 0;
+  }
+  .btn.next {
+    width: auto;
+    padding: 13px 28px;
+  }
+  .btn.next:disabled {
+    background: var(--line);
+    color: var(--faint);
+    cursor: default;
+  }
+  .btn.next:disabled:hover { background: var(--line); }
+
+  /* result */
+  .r-eyebrow { color: var(--accent); }
+  .r-title { font-size: clamp(25px, 5.5vw, 30px); }
+  .r-body { color: var(--muted); font-size: 16.5px; margin: 0 0 30px; }
+  .r-body strong { color: var(--ink); font-weight: 600; }
+
+  .track-wrap { margin: 0 0 34px; }
+  .track {
+    position: relative;
+    height: 10px;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--track-a), var(--track-b));
+    margin: 0 0 10px;
+  }
+  .track .mark {
+    position: absolute;
+    top: 50%;
+    width: 20px; height: 20px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 3px solid var(--accent-deep);
+    transform: translate(-50%, -50%);
+    transition: left .6s cubic-bezier(.4,0,.2,1);
+    box-shadow: 0 2px 8px rgba(0,0,0,.15);
+  }
+  @media (prefers-reduced-motion: reduce) { .track .mark { transition: none; } }
+  .track-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12.5px;
+    color: var(--faint);
+  }
+  .track-labels span.on { color: var(--accent-deep); font-weight: 600; }
+
+  .steps-wrap { margin: 4px 0 30px; }
+  .steps-h {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--ink);
+    letter-spacing: -.01em;
+    margin: 0 0 16px;
+  }
+  .steps { display: flex; flex-direction: column; gap: 15px; }
+  .step { display: flex; gap: 13px; align-items: flex-start; }
+  .step .ic {
+    flex: none;
+    width: 7px; height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin-top: 9px;
+  }
+  .step .st-t { font-size: 15.5px; font-weight: 600; color: var(--ink); margin: 0 0 3px; line-height: 1.45; }
+  .step .st-d { font-size: 14.5px; color: var(--muted); line-height: 1.62; margin: 0; }
+
+  .support {
+    background: var(--accent-soft);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 18px 20px;
+    margin: 0 0 28px;
+    font-size: 15px;
+    color: var(--ink);
+    line-height: 1.66;
+  }
+  .support b { color: var(--accent-deep); }
+
+  .disclaimer {
+    font-size: 12.5px;
+    color: var(--faint);
+    line-height: 1.6;
+    margin: 22px 4px 0;
+    text-align: center;
+  }
+  .r-actions { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
+
+  .qframe { margin: 0 0 6px; font-size: 14px; font-weight: 700; color: var(--accent); }
+  .optd { margin-left: 6px; font-size: 13px; color: var(--muted); font-weight: 500; }
+  .btn.line { width: 100%; background: transparent; color: var(--accent-deep); border: 1.5px solid var(--accent); }
+  .nav[hidden] { display: none !important; }
+  .top { gap: 12px; }
+  .top .whom { flex: 1; }
+  .icon-back { width: 40px; height: 40px; flex: none; border-radius: 50%; border: 1.5px solid var(--line); background: transparent; color: var(--ink); font-size: 18px; cursor: pointer; display: grid; place-items: center; }
+  .hidden { display: none !important; }
+
+  /* 노견케어 공통 상단: 사진 위에 제목 (생활 테스트 템플릿과 같은 구성, 코랄) */
+  body, body *:not(.ti) {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+  }
+  /* 앱 폭을 생활 테스트와 같게(520px). 휴대폰에서는 원래대로 화면 폭을 꽉 채운다 */
+  .app { max-width: 520px !important; margin-left: auto !important; margin-right: auto !important; }
+  .wrap, .stage { max-width: 488px !important; margin-left: auto !important; margin-right: auto !important; }
+  #intro > .dc-hero { margin: -40px -34px 24px; border-radius: 20px 20px 0 0; }
+  /* 브라우저 자동 완성의 하늘색 바탕을 앱 색으로 덮는다 */
+  input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #FFFDFB inset !important; -webkit-text-fill-color: #2E2A28 !important; transition: background-color 9999s;
+  }
+  .dc-hero { position: relative; border-radius: 20px; overflow: hidden; margin: 0 0 18px; background: #2E2724; }
+  .dc-hero img { display: block; width: 100%; max-width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .dc-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, rgba(30, 20, 14, .55) 60%, rgba(30, 20, 14, .9) 100%); }
+  .dc-hero-text { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; display: grid; gap: 6px; padding: 0 20px 18px; color: #fff; text-align: left; text-shadow: 0 1px 10px rgba(0, 0, 0, .45); }
+  .dc-hero-text .dc-eyebrow { font-size: 14px; font-weight: 800; letter-spacing: -.01em; color: #F6B394; }
+  .dc-hero-text h1 { margin: 0; font-size: 30px; font-weight: 800; line-height: 1.25; letter-spacing: -.04em; color: #fff; text-wrap: balance; }
+  .dc-hero-text p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.5; color: rgba(255, 255, 255, .85); }
+
+  /* 결과 아래 공통 버튼 (dog/actions.js) */
+  .ra { display: grid; gap: 10px; margin: 22px 0 4px; }
+  .ra button { width: 100%; padding: 16px; border-radius: 16px; font-size: 17px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .ra-copy { background: #B4532A; color: #fff; border: 0; }
+  .ra-again { background: transparent; color: #8A3D1E; border: 1.5px solid #B4532A; }
+  .ra-toast { margin: 4px 0 0; text-align: center; font-size: 15px; color: #8A3D1E; font-weight: 600; }
+  #copyBtn { background: #B4532A; color: #fff; }
+
+  /* 결과 아래 공통 버튼 (dog/actions.js) */
+  .ra { display: grid; gap: 10px; margin: 22px 0 4px; }
+  .ra button { width: 100%; padding: 16px; border-radius: 16px; font-size: 17px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .ra-copy { background: #B4532A; color: #fff; border: 0; }
+  .ra-again { background: transparent; color: #8A3D1E; border: 1.5px solid #B4532A; }
+  .ra-toast { margin: 4px 0 0; text-align: center; font-size: 15px; color: #8A3D1E; font-weight: 600; }
+</style>
+
+<div class="stage">
+  <!-- INTRO -->
+  <section id="intro" class="card fade">
+    <header class="dc-hero">
+    <img src="../img/dog-petloss.jpg" alt="담요와 촛불 옆 액자 속 강아지 사진">
+    <div class="dc-hero-text">
+      <span class="dc-eyebrow">노견케어</span>
+      <h1>지금 내 마음, 어디쯤일까</h1>
+    </div>
+  </header>
+    <p class="lede">이건 진단이 아니에요. 지금 내 슬픔이 <strong>어디쯤 있는지</strong>, 그리고 그게 <strong>얼마나 당연한 일인지</strong> 함께 들여다보는 거예요. <strong>지난 2주</strong> 동안 이런 마음이 든 날이 얼마나 되는지, 편하게 골라 주세요.</p>
+    <div class="field">
+      <label for="petname">떠나보낸 아이의 이름 <span style="color:var(--faint)">(선택, 안 적어도 돼요)</span></label>
+      <input id="petname" type="text" maxlength="12" placeholder="예: 사랑이" autocomplete="off">
+    </div>
+    <button class="btn" id="startBtn">시작하기</button>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="card hidden">
+    <div class="top">
+      <button class="icon-back" id="backBtn" aria-label="이전 질문">←</button>
+      <span class="whom" id="whom"></span>
+      <span class="count" id="count"></span>
+    </div>
+    <div class="bar"><i id="progress"></i></div>
+    <div id="qFade" class="fade">
+      <p class="qframe">지난 2주 동안, 이런 마음이 든 날이 얼마나 되나요?</p>
+      <p class="q" id="qtext"></p>
+      <div class="opts" id="opts"></div>
+    </div>
+    <div class="nav" hidden>
+            <button class="btn next" id="nextBtn" disabled>다음 ›</button>
+    </div>
+  </section>
+
+  <!-- RESULT -->
+  <section id="result" class="card fade hidden">
+    <p class="eyebrow r-eyebrow" id="rBand"></p>
+    <h1 class="r-title" id="rTitle"></h1>
+    <p class="r-body" id="rBody"></p>
+    <div class="track-wrap">
+      <div class="track"><span class="mark" id="mark"></span></div>
+      <div class="track-labels">
+        <span id="lb0">담담기</span><span id="lb1">한복판</span><span id="lb2">깊은 골</span>
+      </div>
+    </div>
+    <div class="steps-wrap">
+      <p class="steps-h">지금, 이런 것들이 마음을 도와줘요</p>
+      <div class="steps" id="steps"></div>
+    </div>
+    <div class="support hidden" id="support"></div>
+    <div class="r-actions">
+      <div id="plActions" style="display:grid;gap:10px">
+        <button class="btn" id="copyBtn">결과 복사하기</button>
+        <button class="btn line" id="againBtn">다시 시작하기</button>
+      </div>
+    </div>
+    <p class="disclaimer">이 체크는 의학적 진단이 아니라, 지금 마음의 위치를 함께 살펴보는 참고용이에요.<br>반려동물 애도 척도(PBQ)의 세 축을 바탕으로 만든 초안이에요.</p>
+  </section>
+</div>
+
+<script>
+(function () {
+  // 지난 2주 기준 날수로 답한다 (0~3점)
+  var OPTS = [["없었어요", ""], ["며칠 그랬어요", "1~6일"], ["일주일 넘게 그랬어요", "7~11일"], ["거의 매일 그랬어요", "12일 이상"]];
+  // {A} = 아이 지칭. 이름을 적으면 헤더에만 반영하고, 문항은 "그 아이"로 유지(조사 오류 방지).
+  var QUESTIONS = [
+    // 그리움 (7)
+    "그 아이가 없으니까, 집에 들어오는 게 예전 같지 않아요",
+    "하루에도 몇 번씩 그 아이 생각이 나요",
+    "아무것도 아닌 순간에 갑자기 눈물이 나요",
+    "아직도 그 아이가 문 앞에서 반겨줄 것만 같아요",
+    "그 아이 없이 지낸다는 게 아직도 실감이 안 나요",
+    "그 아이가 있던 자리(밥그릇·잠자리)를 자꾸 보게 돼요",
+    "마음 한구석이 텅 빈 것 같아요",
+    // 분노 (5)
+    "왜 하필 그 아이한테 이런 일이 생겼는지 화가 나요",
+    "이 일을 떠올리면 누군가를(병원·나 자신·세상) 원망하게 돼요",
+    "아무 일 없이 사는 사람들을 보면 서운하거나 화가 나요",
+    "이게 너무 불공평하게 느껴져요",
+    "작은 일에도 예민해지고 짜증이 나요",
+    // 죄책감 (4)
+    "“그때 더 빨리 알았더라면” 하는 생각이 떠나질 않아요",
+    "내가 뭘 놓쳐서 그 아이를 못 지킨 것 같아요",
+    "마지막 순간에 더 곁에 있어주지 못한 게 계속 걸려요",
+    "내가 한 선택이 맞았는지 자꾸 되물어요"
+  ];
+
+  var BANDS = [
+    {
+      max: 15, band: "담담기", title: "지금은 비교적 차분하게",
+      body: "지금은 마음이 비교적 잔잔하게 지나가고 있어요. 그래도 문득 그리운 날이 찾아오면, 그건 그만큼 <strong>깊이 사랑했다는 뜻</strong>이에요. 그 마음, 억누르지 않아도 괜찮아요.",
+      steps: [
+        { t: "그리운 마음을 눌러두지 마세요", d: "문득 떠오르는 그리움은 그만큼 사랑했다는 증거예요. 밀어내지 말고, 그대로 느껴도 괜찮아요." },
+        { t: "그 아이를 남겨두세요", d: "사진 한 장, 짧은 기록으로 함께한 시간을 남겨보세요. 잊는 게 아니라, 오래 기억하는 방법이에요." },
+        { t: "곁에 나눌 사람을 두세요", d: "따뜻한 추억이든 슬픔이든, 같은 마음을 아는 사람과 나누면 더 오래 간직할 수 있어요." }
+      ]
+    },
+    {
+      max: 31, band: "한복판", title: "지금 마음이 많이 무거운 시기예요",
+      body: "지금 많이 무겁고 아픈 시기를 지나고 있어요. 이건 <strong>지극히 정상이에요.</strong> 슬픔에도 시간이 필요하고, 당신은 지금 그 시간을 성실히 지나는 중이에요. 서두르지 않아도 돼요.",
+      steps: [
+        { t: "충분히 슬퍼해도 돼요", d: "울고 싶으면 우세요. 슬픔은 참는 것보다 흘려보내는 게 회복에 가까워요. 지금은 그래도 되는 시간이에요." },
+        { t: "마음을 꺼내 적어보세요", d: "떠오르는 마음이나 그 아이에게 하고 싶은 말을 적어보세요. 부치지 못할 편지도 좋아요. 담아두는 것보다 꺼내는 게 나아요." },
+        { t: "'유난이다' 하지 않는 사람에게 기대세요", d: "이 슬픔을 이해받을 수 있는 사람에게 이야기해보세요. 펫로스 자조모임처럼 같은 마음이 모이는 곳도 있어요." },
+        { t: "몸의 리듬을 놓지 마세요", d: "밥, 잠, 잠깐의 햇빛. 기본을 지키는 게 마음을 버티게 해줘요. 몸이 무너지면 마음은 더 힘들어져요." }
+      ]
+    },
+    {
+      max: 48, band: "깊은 골", title: "슬픔이 깊게 자리 잡고 있어요",
+      body: "슬픔이 오래, 그리고 깊게 마음에 자리 잡고 있는 것 같아요. 이건 당신이 약해서가 아니라, <strong>그만큼 크게 사랑했기 때문</strong>이에요. 다만 이 무게는 <strong>혼자 견디지 않아도 돼요.</strong>",
+      steps: [
+        { t: "'그때 그랬더라면'을 내려놓아요", d: "그 생각은 무책임해서가 아니라, 그만큼 사랑했기 때문에 드는 거예요. 당신은 그 순간 할 수 있는 걸 했어요." },
+        { t: "혼자 견디지 마세요", d: "이 무게는 나눠 들어도 되는 거예요. 믿을 수 있는 사람에게, 혹은 상담을 통해 마음을 꺼내놓는 걸 미루지 마세요." },
+        { t: "작은 하루를 지켜요", d: "오늘 하루, 밥 한 끼와 잠깐의 바깥 공기면 충분해요. 크게 애쓰지 않아도 돼요. 지금은 버티는 것만으로 충분히 잘하고 있어요." }
+      ],
+      support: "혼자 감당하기 버거운 날이 이어진다면, 마음을 기댈 곳이 있어요.<br><b>정신건강 상담전화 1577-0199</b> — 24시간, 누구나, 무료예요.<br>펫로스 자조모임에서 같은 마음을 나누는 것도 큰 힘이 돼요."
+    }
+  ];
+
+  var $ = function (id) { return document.getElementById(id); };
+
+  // 이름 끝 글자에 받침이 있으면 "을", 없으면 "를". 한글이 아니면 "를(을)"
+  function objectJosa(name) {
+    var c = name.charCodeAt(name.length - 1);
+    if (c < 0xAC00 || c > 0xD7A3) return "를(을)";
+    return (c - 0xAC00) % 28 ? "을" : "를";
+  }
+  var answers = new Array(QUESTIONS.length).fill(null);
+  var idx = 0;
+  var petName = "";
+
+  var intro = $("intro"), quiz = $("quiz"), result = $("result");
+
+  function show(el) { el.classList.remove("hidden"); }
+  function hide(el) { el.classList.add("hidden"); }
+
+  $("startBtn").addEventListener("click", function () {
+    petName = ($("petname").value || "").trim();
+    idx = 0;
+    answers.fill(null);
+    intro.classList.add("out");
+    setTimeout(function () {
+      hide(intro);
+      show(quiz);
+      $("whom").textContent = petName ? (petName + objectJosa(petName) + " 떠올리며") : "";
+      render();
+    }, 340);
+  });
+
+  function render() {
+    $("count").textContent = (idx + 1) + " / " + QUESTIONS.length;
+    $("progress").style.width = ((idx) / QUESTIONS.length * 100) + "%";
+    $("qtext").textContent = QUESTIONS[idx];
+    var wrap = $("opts");
+    wrap.innerHTML = "";
+    OPTS.forEach(function (label, v) {
+      var b = document.createElement("button");
+      b.className = "opt" + (answers[idx] === v ? " sel" : "");
+      b.innerHTML = '<span class="dot"></span><span>' + label[0] +
+        (label[1] ? ' <small class="optd">' + label[1] + '</small>' : '') + '</span>';
+      b.addEventListener("click", function () { choose(v); });
+      wrap.appendChild(b);
+    });
+    $("backBtn").style.visibility = idx === 0 ? "hidden" : "visible";
+    var nb = $("nextBtn");
+    nb.textContent = (idx === QUESTIONS.length - 1) ? "결과 보기" : "다음 ›";
+    nb.disabled = answers[idx] === null;
+  }
+
+  function swap(fn) {
+    var f = $("qFade");
+    f.classList.add("out");
+    setTimeout(function () { fn(); f.classList.remove("out"); }, 200);
+  }
+
+  var moving = false;
+  function choose(v) {
+    if (moving) return;
+    answers[idx] = v;
+    render();
+    moving = true;
+    setTimeout(function () { moving = false; $("nextBtn").click(); }, 320);
+  }
+
+  $("backBtn").addEventListener("click", function () {
+    if (idx > 0) swap(function () { idx--; render(); });
+  });
+
+  $("nextBtn").addEventListener("click", function () {
+    if (answers[idx] === null) return;
+    if (idx < QUESTIONS.length - 1) {
+      swap(function () { idx++; render(); });
+    } else {
+      $("progress").style.width = "100%";
+      finish();
+    }
+  });
+
+  function finish() {
+    var score = answers.reduce(function (a, b) { return a + (b || 0); }, 0);
+    var bi = 0;
+    for (var i = 0; i < BANDS.length; i++) { if (score <= BANDS[i].max) { bi = i; break; } }
+    var band = BANDS[bi];
+
+    $("rBand").textContent = "펫로스 마음 체크 · 결과";
+    $("rTitle").textContent = band.title;
+    $("rBody").innerHTML = band.body;
+
+    var pct = Math.round(score / 48 * 100);
+    $("mark").style.left = pct + "%";
+    ["lb0", "lb1", "lb2"].forEach(function (id, i) {
+      $(id).className = (i === bi ? "on" : "");
+    });
+
+    var st = $("steps");
+    st.innerHTML = "";
+    (band.steps || []).forEach(function (s) {
+      var row = document.createElement("div");
+      row.className = "step";
+      row.innerHTML = '<span class="ic"></span><div class="tx"><p class="st-t"></p><p class="st-d"></p></div>';
+      row.querySelector(".st-t").textContent = s.t;
+      row.querySelector(".st-d").textContent = s.d;
+      st.appendChild(row);
+    });
+
+    var sup = $("support");
+    if (band.support) { sup.innerHTML = band.support; show(sup); } else { hide(sup); }
+
+    quiz.classList.add("out");
+    setTimeout(function () {
+      hide(quiz); quiz.classList.remove("out");
+      show(result);
+      result.classList.remove("out");
+      setTimeout(function () { $("mark").style.left = pct + "%"; }, 60);
+    }, 340);
+  }
+
+  $("againBtn").addEventListener("click", function () {
+    result.classList.add("out");
+    setTimeout(function () {
+      hide(result); result.classList.remove("out");
+      intro.classList.remove("out");
+      show(intro);
+    }, 340);
+  });
+})();
+</script>
+<script src="actions.js"></script>
+<script>
+(function () {
+  var T = DogActions.text;
+  document.getElementById('copyBtn').addEventListener('click', function () {
+    var steps = Array.prototype.map.call(document.querySelectorAll('#steps .step'), function (st) {
+      return '- ' + T(st.querySelector('.st-t')) + ': ' + T(st.querySelector('.st-d'));
+    });
+    var text = '[펫로스 마음 체크] ' + T(document.getElementById('rTitle')) + '\n' + T(document.getElementById('rBody')) +
+      (steps.length ? '\n\n지금 마음을 도와주는 것\n' + steps.join('\n') : '') +
+      '\n\n진단이 아니라 지금 마음의 위치를 살펴보는 참고용이에요.';
+    DogActions.copy(text, document.getElementById('plActions'));
+  });
+})();
+</script>
+<script src="../assets/maker.js"></script>

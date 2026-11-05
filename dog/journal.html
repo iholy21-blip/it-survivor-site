@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>노견 간병 일지</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="노견 간병 일지">
+<meta property="og:description" content="노견 간병 기록을 매일 남기고, 병원 갈 때 최근 7일을 한 번에 복사">
+<!-- og:image, og:url 은 배포 주소가 정해지면 절대 주소로 추가 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#FBF6F3;color:#2c2c3a;font-size:16px;line-height:1.6}
+:root{--c50:#FCEEE7;--c100:#F6D5C5;--c200:#EFB79C;--c400:#D9774B;--c600:#B4532A;--c800:#8A3D1E;--c900:#5A2812}
+.app{max-width:680px;margin:0 auto;padding:1.5rem 1rem 3rem}
+.app-header{background:var(--c600);border-radius:16px;padding:1.5rem;margin-bottom:1.5rem;text-align:center}
+.app-header h1{font-size:20px;font-weight:600;color:white;margin-bottom:4px}
+.app-header p{font-size:13px;color:rgba(255,255,255,0.85)}
+.section{margin-bottom:1.25rem}
+.section-title{font-size:12px;color:var(--c600);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.06em}
+.card{background:white;border:1.5px solid var(--c100);border-radius:14px;padding:1rem 1.25rem;margin-bottom:10px}
+.pet-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.pet-field label{font-size:12px;color:var(--c600);font-weight:600;display:block;margin-bottom:4px}
+.pet-field input{width:100%;font-size:14px;padding:7px 10px;border:1.5px solid #F6DDD0;border-radius:8px;outline:none}
+.pet-field input:focus{border-color:var(--c400)}
+.date-bar{display:flex;gap:10px;margin-bottom:1.25rem}
+.date-bar input[type=date]{flex:1;font-size:15px;padding:8px 12px;border:1.5px solid var(--c200);border-radius:10px;outline:none}
+.date-bar input[type=date]:focus{border-color:var(--c400)}
+.btn-today{font-size:13px;padding:8px 16px;border-radius:10px;border:1.5px solid var(--c400);background:white;color:var(--c600);cursor:pointer;font-weight:500}
+.btn-today:hover{background:var(--c50)}
+.tabs{display:flex;background:var(--c50);border-radius:12px;padding:4px;margin-bottom:1.5rem}
+.tab{flex:1;font-size:13px;padding:8px 6px;cursor:pointer;border:none;background:none;color:var(--c600);border-radius:9px;font-weight:500}
+.tab.active{background:var(--c600);color:white}
+.row{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.row:last-child{margin-bottom:0}
+.row label{font-size:14px;color:#555;min-width:88px;display:flex;align-items:center;gap:6px}
+.row label i{color:var(--c400);font-size:16px}
+.row input[type=number]{width:86px;font-size:15px;text-align:right;padding:6px 10px;border:1.5px solid #F6DDD0;border-radius:8px;outline:none}
+.row input[type=number]:focus{border-color:var(--c400)}
+.unit{font-size:13px;color:#999}
+.check-label{display:flex;align-items:center;gap:6px;font-size:14px;color:#555;cursor:pointer}
+.check-label input{accent-color:var(--c600);width:16px;height:16px;cursor:pointer}
+.meal-block{margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #FDF1EB}
+.meal-block:last-child{margin-bottom:0;padding-bottom:0;border-bottom:none}
+.meal-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.meal-title{font-size:13px;font-weight:600;color:var(--c600);min-width:40px;display:flex;align-items:center;gap:5px}
+.meal-g{width:80px;font-size:14px;text-align:right;padding:5px 8px;border:1.5px solid #F6DDD0;border-radius:8px;outline:none}
+.meal-g:focus{border-color:var(--c400)}
+.meal-text{width:100%;font-size:13px;padding:6px 10px;border:1.5px solid #F6DDD0;border-radius:8px;outline:none;color:#555;margin-top:4px}
+.meal-text:focus{border-color:var(--c400)}
+.stool-label{font-size:13px;color:#888;margin-bottom:6px}
+.stool-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:6px}
+.stool-btn{padding:8px 4px;font-size:13px;border:1.5px solid #F6DDD0;border-radius:9px;background:white;cursor:pointer;color:#666;text-align:center}
+.stool-btn.active{background:var(--c50);border-color:var(--c400);color:var(--c800);font-weight:500}
+.med-hint{font-size:12px;color:var(--c600);background:var(--c50);padding:7px 10px;border-radius:8px;margin-bottom:10px}
+.med-grid{display:grid;grid-template-columns:1fr;gap:6px}
+@media (min-width:480px){.med-grid{grid-template-columns:1fr 1fr}}
+
+/* 체크박스 - 완전히 단순하게 */
+.med-label{display:flex;align-items:center;gap:8px;font-size:13px;padding:8px 10px;border:1.5px solid #F6DDD0;border-radius:9px;cursor:pointer;background:white;user-select:none}
+.med-label:hover{border-color:var(--c400)}
+.med-label input[type=checkbox]{accent-color:var(--c600);width:16px;height:16px;flex-shrink:0;cursor:pointer}
+.med-label input[type=checkbox]:checked + span{color:var(--c800);font-weight:500}
+.med-label:has(input:checked){background:var(--c50);border-color:var(--c400)}
+.med-name-edit{display:none;font-size:13px;width:100%;border:none;background:none;outline:none;color:var(--c800)}
+.btn-edit-med{font-size:11px;color:#ccc;border:none;background:none;cursor:pointer;padding:0 2px;flex-shrink:0}
+.btn-edit-med:hover{color:var(--c400)}
+.btn-del-med{font-size:13px;color:#ccc;border:none;background:none;cursor:pointer;padding:0 2px;flex-shrink:0}
+.btn-del-med:hover{color:#e24b4a}
+
+.btn-add-med{font-size:13px;color:var(--c600);cursor:pointer;border:none;background:none;margin-top:8px;display:flex;align-items:center;gap:4px;font-weight:500}
+textarea{width:100%;font-size:14px;resize:vertical;min-height:80px;padding:10px 12px;border-radius:10px;border:1.5px solid #F6DDD0;background:white;color:#2c2c3a;font-family:inherit;outline:none;line-height:1.6}
+textarea:focus{border-color:var(--c400)}
+.save-row{display:flex;gap:8px;margin-top:1.5rem}
+.btn-save{flex:1;padding:13px;font-size:15px;font-weight:600;background:var(--c600);color:white;border:none;border-radius:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-save:hover{background:var(--c800)}
+.copy-row{display:flex;gap:8px;margin-top:8px}
+.btn-copy{flex:1;padding:13px 10px;font-size:14px;border:1.5px solid var(--c200);border-radius:12px;background:white;color:var(--c600);cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px;font-weight:600}
+.btn-copy:hover{background:var(--c50)}
+.btn-copy.primary{background:var(--c600);color:white;border-color:var(--c600);font-weight:600}
+.btn-copy.primary:hover{background:var(--c800)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);background:var(--c800);color:white;padding:11px 22px;border-radius:12px;font-size:14px;opacity:0;transition:opacity 0.3s;pointer-events:none;z-index:99;white-space:nowrap}
+.toast.show{opacity:1}
+.history-list{display:flex;flex-direction:column;gap:10px}
+.history-item{background:white;border:1.5px solid var(--c100);border-radius:14px;padding:1rem 1.25rem}
+.history-date{font-size:13px;color:var(--c600);margin-bottom:8px;font-weight:600}
+.hrow{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:4px}
+.hbadge{background:var(--c50);padding:3px 10px;border-radius:8px;font-size:12px;color:var(--c800)}
+.hmeta{font-size:13px;color:#888;margin-top:4px;line-height:1.6}
+.empty{text-align:center;padding:3rem 1rem;color:#aaa;font-size:14px;line-height:2}
+.chart-wrap{padding:0.25rem 0;position:relative;}
+
+  /* 노견케어 공통 상단: 사진 위에 제목 (생활 테스트 템플릿과 같은 구성, 코랄) */
+  body, body *:not(.ti) {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+  }
+  /* 앱 폭을 생활 테스트와 같게(520px). 휴대폰에서는 원래대로 화면 폭을 꽉 채운다 */
+  .app { max-width: 520px !important; margin-left: auto !important; margin-right: auto !important; }
+  .wrap, .stage { max-width: 488px !important; margin-left: auto !important; margin-right: auto !important; }
+  #intro > .dc-hero { margin: -40px -34px 24px; border-radius: 20px 20px 0 0; }
+  /* 브라우저 자동 완성의 하늘색 바탕을 앱 색으로 덮는다 */
+  input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #FFFDFB inset !important; -webkit-text-fill-color: #2E2A28 !important; transition: background-color 9999s;
+  }
+  .disclaimer{background:#FCEEE7;border:1px solid #F5C87A;border-radius:10px;padding:13px 16px;font-size:12px;color:#7A6F6A;margin-bottom:16px;line-height:1.7}
+  .disclaimer strong{color:#8A3D1E}
+  .disclaimer ul{margin:6px 0 0;padding-left:1.2em;list-style:disc}
+  .dc-hero { position: relative; border-radius: 20px; overflow: hidden; margin: 0 0 18px; background: #2E2724; }
+  .dc-hero img { display: block; width: 100%; max-width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .dc-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, rgba(30, 20, 14, .55) 60%, rgba(30, 20, 14, .9) 100%); }
+  .dc-hero-text { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; display: grid; gap: 6px; padding: 0 20px 18px; color: #fff; text-align: left; text-shadow: 0 1px 10px rgba(0, 0, 0, .45); }
+  .dc-hero-text .dc-eyebrow { font-size: 14px; font-weight: 800; letter-spacing: -.01em; color: #F6B394; }
+  .dc-hero-text h1 { margin: 0; font-size: 30px; font-weight: 800; line-height: 1.25; letter-spacing: -.04em; color: #fff; text-wrap: balance; }
+  .dc-hero-text p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.5; color: rgba(255, 255, 255, .85); }
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="dc-hero">
+    <img src="../img/dog-journal.jpg" alt="태블릿 간병 기록 화면 옆 담요 위의 말티즈">
+    <div class="dc-hero-text">
+      <span class="dc-eyebrow">노견케어</span>
+      <h1>노견 간병 일지</h1>
+      <p>매일의 케어 기록을 입력하고 추이를 확인하세요</p>
+    </div>
+  </header>
+
+  <div class="disclaimer">
+    <strong>📌 이 일지에 대해 꼭 알아주세요</strong>
+    <ul>
+      <li>기록은 <strong>이 기기의 브라우저에만 저장</strong>되고 서버로 보내지 않아요.</li>
+      <li>기록을 돕는 도구일 뿐, <strong>진단이나 처방이 아니에요.</strong></li>
+      <li>아이 상태는 담당 수의사 선생님과 상의하세요.</li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <div class="section-title">우리 아이 정보</div>
+    <div class="card">
+      <div class="pet-grid">
+        <div class="pet-field"><label>이름</label><input type="text" id="pet-name" placeholder="예) 콩이"></div>
+        <div class="pet-field"><label>나이</label><input type="text" id="pet-age" placeholder="예) 15살"></div>
+        <div class="pet-field"><label>몸무게</label><input type="text" id="pet-weight" placeholder="예) 3.2kg"></div>
+        <div class="pet-field"><label>품종</label><input type="text" id="pet-breed" placeholder="예) 말티즈"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="date-bar">
+    <input type="date" id="record-date">
+    <button class="btn-today" onclick="goToday()">오늘</button>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="switchTab('record',this)">기록 입력</button>
+    <button class="tab" onclick="switchTab('history',this)">기록 보기</button>
+    <button class="tab" onclick="switchTab('graph',this)">주간 그래프</button>
+  </div>
+
+  <div id="tab-record">
+    <div class="section">
+      <div class="section-title">바이탈</div>
+      <div class="card">
+        <div class="row"><label><i class="ti ti-wind"></i> 호흡수</label><input type="number" id="breath" min="0" max="100" placeholder="0"><span class="unit">회/분</span></div>
+        <div class="row"><label><i class="ti ti-droplet"></i> 음수량</label><input type="number" id="water" min="0" placeholder="0"><span class="unit">ml</span></div>
+        <div class="row"><label><i class="ti ti-needle"></i> 피하수액</label><input type="number" id="fluid" min="0" placeholder="0"><span class="unit">cc</span><label class="check-label"><input type="checkbox" id="fluid-done"> 완료</label></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">식사 & 간식</div>
+      <div class="card">
+        <div class="meal-block">
+          <div class="meal-row"><span class="meal-title"><i class="ti ti-sun"></i> 아침</span><input type="number" class="meal-g" id="meal-am" min="0" placeholder="0"><span class="unit">g</span></div>
+          <input type="text" class="meal-text" id="meal-am-text" placeholder="예) 레날캔 7 : 시그니처바이P/A 캔 3, 따뜻하게">
+        </div>
+        <div class="meal-block">
+          <div class="meal-row"><span class="meal-title"><i class="ti ti-clock"></i> 점심</span><input type="number" class="meal-g" id="meal-noon" min="0" placeholder="0"><span class="unit">g</span></div>
+          <input type="text" class="meal-text" id="meal-noon-text" placeholder="예) 처방식, 인흡착제 혼합">
+        </div>
+        <div class="meal-block">
+          <div class="meal-row"><span class="meal-title"><i class="ti ti-moon"></i> 저녁</span><input type="number" class="meal-g" id="meal-pm" min="0" placeholder="0"><span class="unit">g</span></div>
+          <input type="text" class="meal-text" id="meal-pm-text" placeholder="예) 레날캔, 오메가덤 반 개 허용">
+        </div>
+        <div class="meal-block">
+          <div class="meal-row"><span class="meal-title"><i class="ti ti-cookie"></i> 간식</span></div>
+          <input type="text" class="meal-text" id="snack-text" placeholder="예) 젤리믹스 3알 / 없음">
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">대소변</div>
+      <div class="card">
+        <div class="row"><label><i class="ti ti-toilet-paper"></i> 소변 횟수</label><input type="number" id="urine-count" min="0" placeholder="0"><span class="unit">회</span></div>
+        <div class="stool-label">대변 상태</div>
+        <div class="stool-grid">
+          <button class="stool-btn active" onclick="selectStool('없음',this)">없음</button>
+          <button class="stool-btn" onclick="selectStool('정상',this)">정상</button>
+          <button class="stool-btn" onclick="selectStool('무름',this)">무름</button>
+          <button class="stool-btn" onclick="selectStool('설사',this)">설사</button>
+          <button class="stool-btn" onclick="selectStool('혈변',this)">혈변</button>
+          <button class="stool-btn" onclick="selectStool('변비',this)">변비</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">투약 체크</div>
+      <div class="card">
+        <div class="med-hint">✏️ 약 이름 옆 연필 버튼으로 수정 · + 추가 · × 삭제</div>
+        <div class="med-grid" id="med-grid"></div>
+        <button class="btn-add-med" onclick="addMed()"><i class="ti ti-plus"></i> 약 추가하기</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">특이사항</div>
+      <div class="card" style="padding:0.75rem 1rem">
+        <textarea id="notes" placeholder="오늘 관찰된 증상, 행동 변화, 병원 방문 내용 등을 자유롭게 기록하세요"></textarea>
+      </div>
+    </div>
+
+    <div class="save-row">
+      <button class="btn-save" onclick="saveRecord()"><i class="ti ti-device-floppy"></i> 오늘 기록 저장</button>
+    </div>
+  </div>
+
+  <div id="tab-history" style="display:none">
+    <div class="section-title">병원 갈 때 · 백업</div>
+    <div class="copy-row" style="margin:0 0 1.5rem">
+      <button class="btn-copy primary" onclick="copyWeek()"><i class="ti ti-copy"></i> 최근 7일 복사</button>
+      <button class="btn-copy" onclick="exportCSV()"><i class="ti ti-download"></i> CSV 저장</button>
+    </div>
+    <div class="history-list" id="history-list"></div>
+  </div>
+
+  <div id="tab-graph" style="display:none">
+    <div class="section-title">병원 갈 때</div>
+    <div class="copy-row" style="margin:0 0 1.5rem">
+      <button class="btn-copy primary" onclick="copyWeek()"><i class="ti ti-copy"></i> 최근 7일 복사</button>
+    </div>
+    <div class="section"><div class="section-title">호흡수 추이 (최근 7일)</div><div class="card chart-wrap" style="height:200px"><canvas id="chart-breath"></canvas></div></div>
+    <div class="section"><div class="section-title">음수량 추이 (최근 7일)</div><div class="card chart-wrap" style="height:200px"><canvas id="chart-water"></canvas></div></div>
+    <div class="section"><div class="section-title">식사량 추이 (최근 7일)</div><div class="card chart-wrap" style="height:200px"><canvas id="chart-meal"></canvas></div></div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+const DEFAULT_MEDS=[
+  '신부전약 (예: 레나크린)',
+  '심장약 (예: 바이로그)',
+  '인지장애약 (예: 제다큐어S)'
+];
+let stoolState='없음';
+let meds=[];
+
+function initMeds(){
+  const s=localStorage.getItem('sdg-meds-v6');
+  meds=s?JSON.parse(s):DEFAULT_MEDS.map(n=>({name:n}));
+  renderMeds();
+}
+function saveMeds(){localStorage.setItem('sdg-meds-v6',JSON.stringify(meds));}
+
+function renderMeds(){
+  const g=document.getElementById('med-grid');
+  g.innerHTML=meds.map((m,i)=>`
+    <div style="display:flex;align-items:center;gap:4px">
+      <label class="med-label" style="flex:1">
+        <input type="checkbox" id="chk-${i}" onchange="void(0)">
+        <span id="med-name-${i}">${escHtml(m.name)}</span>
+      </label>
+      <button class="btn-edit-med" onclick="editMed(${i})" title="이름 수정">✏</button>
+      <button class="btn-del-med" onclick="deleteMed(${i})" title="삭제">×</button>
+    </div>`).join('');
+}
+
+function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+
+function editMed(i){
+  const newName=prompt('약 이름을 수정하세요:', meds[i].name);
+  if(newName&&newName.trim()){meds[i].name=newName.trim();saveMeds();renderMeds();}
+}
+function deleteMed(i){
+  if(confirm('"'+meds[i].name+'"을(를) 삭제할까요?')){meds.splice(i,1);saveMeds();renderMeds();}
+}
+function addMed(){
+  const newName=prompt('새 약 이름을 입력하세요:');
+  if(newName&&newName.trim()){meds.push({name:newName.trim()});saveMeds();renderMeds();}
+}
+
+function selectStool(v,el){
+  stoolState=v;
+  document.querySelectorAll('.stool-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+function goToday(){document.getElementById('record-date').value=todayStr();}
+function todayStr(){const d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}  /* 기기의 현지 날짜(한국이면 한국 시간) */
+function getRecords(){return JSON.parse(localStorage.getItem('sdg-records')||'{}');}
+
+function buildRecord(){
+  const date=document.getElementById('record-date').value||todayStr();
+  const checkedMeds=meds.map((m,i)=>document.getElementById('chk-'+i)?.checked?m.name:null).filter(Boolean);
+  const rec={
+    date,
+    pet:{name:document.getElementById('pet-name').value,age:document.getElementById('pet-age').value,weight:document.getElementById('pet-weight').value,breed:document.getElementById('pet-breed').value},
+    breath:+document.getElementById('breath').value||0,
+    water:+document.getElementById('water').value||0,
+    fluid:+document.getElementById('fluid').value||0,
+    fluidDone:document.getElementById('fluid-done').checked,
+    mealAm:+document.getElementById('meal-am').value||0,
+    mealAmText:document.getElementById('meal-am-text').value.trim(),
+    mealNoon:+document.getElementById('meal-noon').value||0,
+    mealNoonText:document.getElementById('meal-noon-text').value.trim(),
+    mealPm:+document.getElementById('meal-pm').value||0,
+    mealPmText:document.getElementById('meal-pm-text').value.trim(),
+    snackText:document.getElementById('snack-text').value.trim(),
+    urineCount:+document.getElementById('urine-count').value||0,
+    stool:stoolState,meds:checkedMeds,
+    notes:document.getElementById('notes').value.trim()
+  };
+  return rec;
+}
+
+function saveRecord(){
+  const rec=buildRecord(),date=rec.date;
+  const records=getRecords();records[date]=rec;
+  localStorage.setItem('sdg-records',JSON.stringify(records));
+  showToast('저장되었습니다 ✓');
+}
+
+function showToast(msg){
+  const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2200);
+}
+
+function exportCSV(){
+  const records=getRecords();
+  const rows=Object.values(records).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!rows.length){showToast('저장된 기록이 없습니다');return;}
+  const headers=['날짜','이름','나이','몸무게','품종','호흡수','음수량(ml)','피하수액(cc)','수액완료','아침(g)','아침내용','점심(g)','점심내용','저녁(g)','저녁내용','간식','소변횟수','대변상태','투약','특이사항'];
+  const csv=[headers.join(','),...rows.map(r=>[
+    r.date,r.pet?.name||'',r.pet?.age||'',r.pet?.weight||'',r.pet?.breed||'',
+    r.breath,r.water,r.fluid,r.fluidDone?'O':'X',
+    r.mealAm,'"'+(r.mealAmText||'')+'"',
+    r.mealNoon,'"'+(r.mealNoonText||'')+'"',
+    r.mealPm,'"'+(r.mealPmText||'')+'"',
+    '"'+(r.snackText||'')+'"',
+    r.urineCount,r.stool,
+    '"'+r.meds.join('·')+'"',
+    '"'+(r.notes||'')+'"'
+  ].join(','))].join('\n');
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);
+  a.download='노견간병일지_'+todayStr()+'.csv';a.click();
+}
+
+function recordText(r){
+  const L=[];
+  L.push('■ '+r.date);
+  L.push('호흡수 '+r.breath+'회/분 · 음수 '+r.water+'ml · 피하수액 '+r.fluid+'cc'+(r.fluid?(r.fluidDone?'(완료)':'(미완료)'):''));
+  const meal=[['아침',r.mealAm,r.mealAmText],['점심',r.mealNoon,r.mealNoonText],['저녁',r.mealPm,r.mealPmText]]
+    .filter(m=>m[1]||m[2]).map(m=>m[0]+' '+m[1]+'g'+(m[2]?'('+m[2]+')':''));
+  if(meal.length)L.push('식사: '+meal.join(' / ')+' (합계 '+(r.mealAm+r.mealNoon+r.mealPm)+'g)');
+  if(r.snackText)L.push('간식: '+r.snackText);
+  L.push('소변 '+r.urineCount+'회 · 대변 '+r.stool);
+  if(r.meds&&r.meds.length)L.push('투약: '+r.meds.join(', '));
+  if(r.notes)L.push('특이사항: '+r.notes);
+  return L.join('\n');
+}
+function petLine(r){
+  const p=r.pet||{};
+  const info=[p.breed,p.age?p.age+'살':'',p.weight?p.weight+'kg':''].filter(Boolean).join(', ');
+  return '[노견 간병 일지]'+(p.name?' '+p.name:'')+(info?' ('+info+')':'');
+}
+function copyText(text,okMsg){
+  const done=()=>showToast(okMsg);
+  const fallback=()=>{
+    const ta=document.createElement('textarea');ta.value=text;ta.setAttribute('readonly','');
+    ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();
+    let ok=false;try{ok=document.execCommand('copy');}catch(e){}
+    document.body.removeChild(ta);
+    showToast(ok?okMsg:'복사가 안 되면 화면을 캡처해 주세요');
+  };
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(done,fallback);
+  else fallback();
+}
+function copyWeek(){
+  const t=new Date(todayStr()+'T00:00:00Z');t.setUTCDate(t.getUTCDate()-6);
+  const from=t.toISOString().slice(0,10);
+  const rows=Object.values(getRecords()).filter(r=>r.date>=from&&r.date<=todayStr()).sort((a,b)=>a.date.localeCompare(b.date));
+  if(!rows.length){showToast('최근 7일에 저장된 기록이 없어요');return;}
+  const br=rows.filter(r=>r.breath>0).map(r=>r.breath);
+  const head=petLine(rows[rows.length-1])+'\n최근 7일 ('+from+' ~ '+todayStr()+') · 기록 '+rows.length+'일'
+    +(br.length?'\n호흡수 평균 '+Math.round(br.reduce((a,b)=>a+b,0)/br.length)+'회/분 (최저 '+Math.min(...br)+' · 최고 '+Math.max(...br)+')':'');
+  copyText(head+'\n\n'+rows.map(recordText).join('\n\n'),'최근 7일 기록을 복사했어요');
+}
+
+function renderHistory(){
+  const records=getRecords();
+  const sorted=Object.values(records).sort((a,b)=>b.date.localeCompare(a.date));
+  const el=document.getElementById('history-list');
+  if(!sorted.length){el.innerHTML='<div class="empty">아직 저장된 기록이 없습니다<br>기록 입력 탭에서 오늘 기록을 저장해보세요</div>';return;}
+  el.innerHTML=sorted.map(r=>`
+    <div class="history-item">
+      <div class="history-date">${r.date}${r.pet?.name?' · '+r.pet.name:''}</div>
+      <div class="hrow">
+        <span class="hbadge">호흡 ${r.breath}회/분</span>
+        <span class="hbadge">음수 ${r.water}ml</span>
+        <span class="hbadge">수액 ${r.fluid}cc${r.fluidDone?' ✓':''}</span>
+        <span class="hbadge">식사 ${r.mealAm+r.mealNoon+r.mealPm}g</span>
+        <span class="hbadge">소변 ${r.urineCount}회</span>
+        <span class="hbadge">대변 ${r.stool}</span>
+      </div>
+      ${r.mealAmText||r.mealNoonText||r.mealPmText?`<div class="hmeta">🍽 ${[r.mealAmText,r.mealNoonText,r.mealPmText].filter(Boolean).join(' / ')}</div>`:''}
+      ${r.snackText?`<div class="hmeta">🍪 간식: ${r.snackText}</div>`:''}
+      ${r.meds.length?`<div class="hmeta">💊 ${r.meds.join(', ')}</div>`:''}
+      ${r.notes?`<div class="hmeta">📝 ${r.notes}</div>`:''}
+    </div>`).join('');
+}
+
+function renderGraphs(){
+  const records=getRecords();
+  const sorted=Object.values(records).sort((a,b)=>a.date.localeCompare(b.date)).slice(-7);
+  const labels=sorted.map(r=>r.date.slice(5));
+  ['chart-breath','chart-water','chart-meal'].forEach(id=>{const c=Chart.getChart(id);if(c)c.destroy();});
+  const opt=()=>({responsive:true,maintainAspectRatio:false,animation:{duration:0},plugins:{legend:{display:false}},scales:{y:{beginAtZero:true,grid:{color:'rgba(127,119,221,0.1)'},ticks:{color:'#888'}},x:{grid:{display:false},ticks:{color:'#888'}}}});
+  new Chart(document.getElementById('chart-breath'),{type:'line',data:{labels,datasets:[{data:sorted.map(r=>r.breath),borderColor:'#D9774B',backgroundColor:'#7F77DD18',tension:0.3,pointRadius:4,pointBackgroundColor:'#D9774B',fill:true}]},options:opt()});
+  new Chart(document.getElementById('chart-water'),{type:'line',data:{labels,datasets:[{data:sorted.map(r=>r.water),borderColor:'#8A3D1E',backgroundColor:'#534AB718',tension:0.3,pointRadius:4,pointBackgroundColor:'#8A3D1E',fill:true}]},options:opt()});
+  new Chart(document.getElementById('chart-meal'),{type:'bar',data:{labels,datasets:[{data:sorted.map(r=>r.mealAm+r.mealNoon+r.mealPm),backgroundColor:'#AFA9EC',borderRadius:6}]},options:opt()});
+}
+
+function switchTab(name,el){
+  ['record','history','graph'].forEach(t=>{document.getElementById('tab-'+t).style.display=t===name?'block':'none';});
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  if(name==='history')renderHistory();
+  if(name==='graph')renderGraphs();
+}
+goToday();
+initMeds();
+</script>
+<script src="../assets/maker.js"></script>
+</body>
+</html>

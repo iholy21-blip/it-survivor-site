@@ -1,0 +1,743 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>냉장고 음식 만들기</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="냉장고 음식 만들기">
+<meta property="og:description" content="있는 재료를 고르면 지금 만들 수 있는 요리를 찾아 주는 생활 앱">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+/* 디자인 토큰: replica/design/tokens.css 와 같은 값 */
+:root {
+  --c-bg: #fbfaf7;
+  --c-surface: #ffffff;
+  --c-surface-alt: #f1eee6;
+  --c-border: #d9d4c7;
+  --c-border-input: #6f6a60;
+  --c-text: #1b1b1b;
+  --c-text-muted: #4a463f;
+  --c-accent: #1d6a43;
+  --c-accent-soft: #e3f1e8;
+  --c-on-accent: #ffffff;
+  --c-danger: #a8261c;
+  --c-warning-soft: #fdf0d9;
+  --c-warning-text: #6b4300;
+  --fs-base: 20px; --lh-base: 32px;
+  --fs-lg: 24px; --lh-lg: 34px;
+  --fs-xl: 30px; --lh-xl: 40px;
+  --fs-button: 22px;
+  --r-md: 14px;
+  --r-lg: 20px;
+  --button-h: 64px;
+  --tap-min: 56px;
+  --nav-h: 72px;
+  --content-max: 640px;
+  --s-2: 8px; --s-3: 12px; --s-4: 16px; --s-5: 24px; --s-6: 32px; --s-7: 48px;
+  --shadow-card: 0 1px 3px rgba(40,30,10,.12);
+  --font: system-ui, -apple-system, 'Apple SD Gothic Neo', 'Malgun Gothic', 'Noto Sans KR', sans-serif;
+  /* 표지 화면: 템플릿(assets/app.css, 브랜치 claude/vibrant-archimedes-3313h7)과 같은 값 */
+  --t-bg: #18203a;
+  --t-page-ink: #f3efe6;
+  --t-page-soft: rgba(243, 239, 230, .72);
+  --t-card: #f1f5f1;
+  --t-card-2: #ffffff;
+  --t-ink: #23232b;
+  --t-ink-soft: #5e5f6e;
+  /* 냉장고 앱 대표색: 기존 앱의 초록 */
+  --t-accent: #2e7d4f;
+  --t-accent-text: #8fd3a8;
+  --t-accent-ink: #ffffff;
+  --t-font: "Pretendard", -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", "Noto Sans KR", sans-serif;
+  /* 표지 사진: ../img/fridge.jpg (Gemini 생성, 1200×900). 사진이 안 뜨면 나무색이 보인다 */
+  --hero-photo: url("../img/fridge.jpg"), linear-gradient(135deg, #8a6845 0%, #6b4e33 45%, #4a3524 100%);
+}
+/* 어두운 화면 설정일 때 */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --c-bg: #151718; --c-surface: #1e2123; --c-surface-alt: #2a2d30; --c-border: #3a3e42; --c-border-input: #8d9399;
+    --c-text: #f1f0ec; --c-text-muted: #c6c3bc; --c-accent: #7fd1a0; --c-accent-soft: #1d3a2a; --c-on-accent: #0c2117;
+    --c-danger: #ff9a8f; --c-warning-soft: #3a2c12; --c-warning-text: #ffd58a;
+    --shadow-card: 0 1px 3px rgba(0,0,0,.5); color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --c-bg: #151718; --c-surface: #1e2123; --c-surface-alt: #2a2d30; --c-border: #3a3e42; --c-border-input: #8d9399;
+  --c-text: #f1f0ec; --c-text-muted: #c6c3bc; --c-accent: #7fd1a0; --c-accent-soft: #1d3a2a; --c-on-accent: #0c2117;
+  --c-danger: #ff9a8f; --c-warning-soft: #3a2c12; --c-warning-text: #ffd58a;
+  --shadow-card: 0 1px 3px rgba(0,0,0,.5); color-scheme: dark;
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0; background: var(--c-bg); color: var(--c-text);
+  font-family: var(--font); font-size: var(--fs-base); line-height: var(--lh-base);
+  word-break: keep-all; overflow-wrap: anywhere;
+}
+main {
+  max-width: var(--content-max); margin: 0 auto;
+  padding-block: var(--s-5) calc(var(--nav-h) + var(--s-7) + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+h1 { font-size: var(--fs-xl); line-height: var(--lh-xl); margin: 0 0 var(--s-3); }
+h2 { font-size: var(--fs-lg); line-height: var(--lh-lg); margin: var(--s-6) 0 var(--s-3); }
+p { margin: 0 0 var(--s-4); }
+.muted { color: var(--c-text-muted); }
+
+button, .btn {
+  font: inherit; font-size: var(--fs-button); font-weight: 700;
+  min-height: var(--button-h); padding: var(--s-2) var(--s-5);
+  border-radius: var(--r-md); border: 2px solid var(--c-accent);
+  background: var(--c-accent); color: var(--c-on-accent);
+  cursor: pointer; display: inline-flex; align-items: center; justify-content: center;
+  text-decoration: none; text-align: center;
+}
+button:active { transform: translateY(1px); }
+:focus-visible { outline: 3px solid var(--c-accent); outline-offset: 3px; }
+.btn-block { width: 100%; }
+.btn-secondary { background: var(--c-surface); color: var(--c-accent); }
+.btn-danger { background: var(--c-surface); color: var(--c-danger); border-color: var(--c-border); min-height: var(--tap-min); font-size: var(--fs-base); padding: 0 var(--s-4); }
+.stack > * + * { margin-top: var(--s-3); }
+
+.back { display: inline-flex; align-items: center; color: var(--c-accent); font-weight: 700; min-height: var(--tap-min); margin-bottom: var(--s-2); }
+
+.card { background: var(--c-surface); border: 1px solid var(--c-border); border-radius: var(--r-lg); box-shadow: var(--shadow-card); }
+
+
+/* 순서 안내 */
+.guide { background: var(--c-accent-soft); border-radius: var(--r-lg); padding: var(--s-4) var(--s-5); margin-bottom: var(--s-5); }
+.guide ol { margin: 0; padding-left: 1.4em; font-weight: 700; }
+.guide li + li { margin-top: var(--s-2); }
+
+/* 내가 고른 재료 */
+.picked { padding: var(--s-4); margin-bottom: var(--s-5); }
+.picked h2 { margin: 0 0 var(--s-3); }
+.chips { display: flex; flex-wrap: wrap; gap: var(--s-2); }
+.chip { min-height: var(--tap-min); font-size: var(--fs-base); padding: 0 var(--s-4); gap: var(--s-2); }
+.chip .x { font-weight: 800; }
+.chip-custom { background: var(--c-surface-alt); color: var(--c-text); border-color: var(--c-border-input); }
+
+/* 재료 버튼 */
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-3); }
+.toggle { background: var(--c-surface); color: var(--c-text); border: 2px solid var(--c-border-input); font-size: var(--fs-base); justify-content: flex-start; padding: 0 var(--s-4); gap: var(--s-2); }
+.toggle .mark { display: inline-block; width: 1.2em; flex: none; font-weight: 800; }
+.toggle[aria-pressed="true"] { background: var(--c-accent); color: var(--c-on-accent); border-color: var(--c-accent); }
+.cat-label { font-weight: 700; color: var(--c-text-muted); margin: var(--s-5) 0 var(--s-2); }
+.more { margin-top: var(--s-4); }
+
+/* 직접 쓰기 */
+label.field { display: block; font-weight: 700; margin: 0 0 var(--s-2); }
+.write-row { display: flex; gap: var(--s-2); }
+input[type="text"] {
+  flex: 1; min-width: 0; min-height: var(--button-h); font: inherit; padding: 0 var(--s-4);
+  border: 2px solid var(--c-border-input); border-radius: var(--r-md); background: var(--c-surface); color: var(--c-text);
+}
+.msg { margin: var(--s-3) 0 0; padding: var(--s-3) var(--s-4); border-radius: var(--r-md); background: var(--c-accent-soft); }
+.msg.warn { background: var(--c-warning-soft); color: var(--c-warning-text); }
+.note { background: var(--c-surface-alt); border-radius: var(--r-md); padding: var(--s-3) var(--s-4); }
+
+.go { position: sticky; bottom: calc(var(--nav-h) + var(--s-3)); margin-top: var(--s-6); box-shadow: var(--shadow-card); }
+
+/* 요리 목록 */
+.recipe-card { display: block; width: 100%; text-align: left; padding: var(--s-4) var(--s-5); background: var(--c-surface); color: var(--c-text); border: 1px solid var(--c-border); border-radius: var(--r-lg); box-shadow: var(--shadow-card); min-height: auto; font-size: var(--fs-base); font-weight: 400; }
+.recipe-card + .recipe-card { margin-top: var(--s-3); }
+.recipe-card .name { display: block; font-size: var(--fs-lg); line-height: var(--lh-lg); font-weight: 700; margin-bottom: var(--s-2); }
+.recipe-card .meta { display: block; color: var(--c-text-muted); }
+.recipe-card .status { display: block; margin-top: var(--s-2); border-radius: var(--r-md); padding: var(--s-2) var(--s-3); font-weight: 700; }
+.status.ok { background: var(--c-accent-soft); color: var(--c-accent); }
+.status.lack { background: var(--c-warning-soft); color: var(--c-warning-text); }
+.empty { text-align: center; padding: var(--s-6) var(--s-4); }
+
+/* 레시피 */
+.checks { list-style: none; margin: 0; padding: 0; }
+.checks li { display: flex; justify-content: space-between; gap: var(--s-3); padding: var(--s-3) var(--s-4); border-bottom: 1px solid var(--c-border); }
+.checks li:last-child { border-bottom: none; }
+.checks .no { background: var(--c-warning-soft); }
+.checks .have { color: var(--c-accent); font-weight: 700; white-space: nowrap; }
+.checks .lack { color: var(--c-warning-text); font-weight: 700; white-space: nowrap; }
+.steps { margin: 0; padding-left: 1.6em; }
+.steps li { margin-bottom: var(--s-4); padding-left: var(--s-2); }
+.checks .amt { font-weight: 400; color: var(--c-text-muted); white-space: nowrap; }
+.measure { margin-top: var(--s-5); }
+.measure p { margin: 0; }
+.measure p + p { margin-top: var(--s-2); }
+
+
+/* S00 표지: 템플릿의 시작 화면과 같은 틀 (사진 4:3 → 남색으로 흐려짐 → 윗줄·제목·부제 → 밝은 카드 → 아래 고정 버튼) */
+body.is-start { background: var(--t-bg); color: var(--t-page-ink); font-family: var(--t-font); }
+body.is-start::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--t-bg); }
+body.is-start nav.bottom { display: none; }
+body.is-start main { max-width: 520px; padding-top: 0; padding-bottom: calc(60px + var(--s-7) + env(safe-area-inset-bottom, 0px)); }
+.hero {
+  position: relative; aspect-ratio: 4 / 3; max-width: none;
+  margin-left: calc(-1 * max(16px, env(safe-area-inset-left, 0px)));
+  margin-right: calc(-1 * max(16px, env(safe-area-inset-right, 0px)));
+  background-image: var(--hero-photo); background-size: cover; background-position: center;
+}
+.hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 25%, rgba(12, 16, 32, .55) 58%, var(--t-bg) 97%); }
+.hero-text {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; display: grid; gap: 6px; padding-bottom: 8px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  text-shadow: 0 1px 10px rgba(0, 0, 0, .45);
+}
+.hero-text p, .hero-text h1 { margin: 0; }
+.hero .eyebrow { font-size: 14px; font-weight: 800; letter-spacing: -.01em; color: var(--t-accent-text); }
+.hero h1 { font-size: 34px; font-weight: 800; line-height: 1.25; letter-spacing: -.04em; color: var(--t-page-ink); text-wrap: balance; }
+.hero .sub { font-size: 15px; font-weight: 500; letter-spacing: -.01em; color: var(--t-page-soft); line-height: 1.5; }
+.start-card { margin-top: 20px; background: var(--t-card); color: var(--t-ink); border-radius: 20px; padding: 22px 20px; display: grid; gap: 18px; }
+.start-card p { margin: 0; }
+.start-card .muted { color: var(--t-ink-soft); }
+.steps3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 0; padding: 0; list-style: none; }
+.steps3 li { background: var(--t-card-2); border-radius: 14px; box-shadow: 0 2px 8px rgba(0, 0, 0, .06); padding: 11px 4px; text-align: center; font-weight: 700; line-height: 1.35; letter-spacing: -.02em; }
+.steps3 strong, .steps3 span { display: block; }
+.steps3 span { font-weight: 400; color: var(--t-ink-soft); }
+.start-go {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20;
+  padding: 16px max(16px, env(safe-area-inset-right, 0px)) calc(14px + env(safe-area-inset-bottom, 0px)) max(16px, env(safe-area-inset-left, 0px));
+  background: linear-gradient(to bottom, transparent, var(--t-bg) 35%);
+}
+.start-go .btn {
+  max-width: 520px; margin: 0 auto; display: flex; min-height: 60px; border: 0; border-radius: 16px;
+  font-size: 20px; font-weight: 700; letter-spacing: -.02em; background: var(--t-accent); color: var(--t-accent-ink);
+}
+.start-go .btn:focus-visible { outline-color: var(--t-accent-text); }
+
+/* 아래 메뉴 */
+nav.bottom {
+  position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--nav-h) + env(safe-area-inset-bottom, 0px));
+  display: grid; grid-template-columns: 1fr 1fr;
+  background: var(--c-surface); border-top: 2px solid var(--c-border);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+  padding-left: env(safe-area-inset-left, 0px); padding-right: env(safe-area-inset-right, 0px);
+}
+nav.bottom a { display: flex; align-items: center; justify-content: center; color: var(--c-text-muted); text-decoration: none; font-size: var(--fs-base); font-weight: 700; }
+nav.bottom a[aria-current="page"] { color: var(--c-accent); text-decoration: underline; text-underline-offset: 8px; text-decoration-thickness: 3px; }
+</style>
+</head>
+<body>
+<main id="app" tabindex="-1"></main>
+<nav class="bottom" aria-label="메뉴">
+  <a href="#/pick" data-tab="pick">① 재료 고르기</a>
+  <a href="#/recipes" data-tab="recipes">② 요리 보기</a>
+</nav>
+
+<script>
+// ===== 데이터 (가짜. 실제 앱의 레시피가 아님) =====
+const CATS = [
+  { id: 'meat',  name: '고기·생선' },
+  { id: 'veg',   name: '채소' },
+  { id: 'etc',   name: '그 밖의 재료' },
+  { id: 'sauce', name: '양념' },
+];
+
+const INGREDIENTS = [
+  ['pork','돼지고기','meat'], ['beef','소고기','meat'], ['chicken','닭고기','meat'],
+  ['tuna','참치캔','meat'], ['fishcake','어묵','meat'], ['ham','햄','meat'],
+  ['greenonion','대파','veg'], ['onion','양파','veg'], ['garlic','마늘','veg'],
+  ['potato','감자','veg'], ['carrot','당근','veg'], ['zucchini','애호박','veg'],
+  ['sprout','콩나물','veg'], ['spinach','시금치','veg'], ['radish','무','veg'],
+  ['chive','부추','veg'], ['cabbage','양배추','veg'], ['tomato','토마토','veg'],
+  ['mushroom','버섯','veg'], ['cucumber','오이','veg'], ['kimchi','김치','veg'],
+  ['egg','계란','etc'], ['tofu','두부','etc'], ['rice','밥','etc'], ['laver','김','etc'],
+  ['ricecake','떡','etc'], ['noodle','소면','etc'], ['flour','부침가루','etc'],
+  ['oil','식용유','sauce'], ['sesameoil','참기름','sauce'], ['soy','간장','sauce'],
+  ['salt','소금','sauce'], ['sugar','설탕','sauce'], ['doenjang','된장','sauce'],
+  ['gochujang','고추장','sauce'], ['chili','고춧가루','sauce'], ['mayo','마요네즈','sauce'],
+  ['vinegar','식초','sauce'],
+].map(([id, name, cat]) => ({ id, name, cat }));
+const ING = Object.fromEntries(INGREDIENTS.map(i => [i.id, i]));
+
+// 레시피는 모두 2인분 기준. 재료는 [재료id, 양, 단위], 양이 null이면 '약간'.
+// 순서 문장의 {재료id}는 "양파 ½개"처럼 이름+양으로 바뀌고, {재료id:을}처럼 쓰면 조사(을/를, 은/는, 과/와, 으로/로)도 맞춰 붙는다.
+const SERVINGS = 2;
+const RECIPES = [
+  { id: 'kimchi-rice', name: '김치볶음밥', minutes: 15,
+    main: [['kimchi',1,'컵'], ['rice',2,'공기'], ['egg',2,'개'], ['greenonion',0.5,'대']],
+    sauce: [['oil',2,'숟가락'], ['soy',1,'숟가락'], ['sesameoil',1,'찻숟가락']],
+    steps: ['{kimchi:은} 가위로 잘게 자르고, {greenonion:은} 송송 썹니다.',
+      '팬에 {oil:을} 두르고 중불에서 대파를 1분 볶아 향을 냅니다.',
+      '김치를 넣고 3분 볶다가 {soy:을} 팬 가장자리에 둘러 살짝 눌게 합니다.',
+      '약불로 줄이고 {rice:을} 넣어 김치와 고루 섞으며 3분 볶습니다.',
+      '불을 끄고 {sesameoil:을} 두릅니다. 다른 팬에 {egg:을} 프라이해서 위에 올립니다.'] },
+  { id: 'egg-roll', name: '계란말이', minutes: 15,
+    main: [['egg',4,'개'], ['greenonion',0.25,'대'], ['carrot',0.25,'개']],
+    sauce: [['salt',2,'꼬집'], ['oil',1,'숟가락']],
+    steps: ['{carrot:과} {greenonion:은} 아주 잘게 다집니다.',
+      '그릇에 {egg:을} 풀고 다진 채소와 {salt:을} 넣어 고루 섞습니다.',
+      '팬을 약불에 올리고 {oil:을} 두른 뒤 키친타월로 얇게 펴 바릅니다.',
+      '계란물의 3분의 1을 붓고, 윗면이 반쯤 익으면 한쪽 끝에서부터 돌돌 맙니다.',
+      '말아 둔 계란을 한쪽으로 밀고, 남은 계란물을 두 번에 나눠 부으며 이어서 맙니다.',
+      '한 김 식힌 뒤 썰어야 모양이 덜 부서집니다.'] },
+  { id: 'doenjang-stew', name: '된장찌개', minutes: 25,
+    main: [['tofu',0.5,'모'], ['zucchini',0.33,'개'], ['onion',0.5,'개'], ['potato',1,'개'], ['greenonion',0.5,'대']],
+    sauce: [['doenjang',2,'숟가락'], ['chili',1,'찻숟가락']],
+    steps: ['{potato}, {zucchini}, {onion}, {tofu:은} 한입 크기로 썹니다. {greenonion:은} 어슷하게 썹니다.',
+      '냄비에 물 2컵 반(종이컵)을 붓고 {doenjang:을} 풉니다.',
+      '센불에서 끓어오르면 감자를 넣고 중불로 5분 끓입니다.',
+      '애호박, 양파, 두부를 넣고 5분 더 끓입니다.',
+      '대파와 {chili:을} 넣고 1분 뒤 불을 끕니다.'] },
+  { id: 'kimchi-stew', name: '김치찌개', minutes: 30,
+    main: [['kimchi',1.5,'컵'], ['pork',150,'g'], ['tofu',0.5,'모'], ['onion',0.5,'개'], ['greenonion',0.5,'대']],
+    sauce: [['oil',1,'숟가락'], ['chili',1,'숟가락']],
+    steps: ['{kimchi:과} {pork:은} 한입 크기로 썹니다. {onion:은} 굵게 채 썰고, {tofu:은} 도톰하게, {greenonion:은} 어슷하게 썹니다.',
+      '냄비에 {oil:을} 두르고 중불에서 김치와 돼지고기를 5분 볶습니다.',
+      '물 3컵(종이컵)을 붓고, 끓어오르면 중약불로 15분 끓입니다.',
+      '양파, 두부, {chili:을} 넣고 5분 더 끓입니다.',
+      '대파를 올리고 불을 끕니다. 싱거우면 김치 국물로 간을 맞춥니다.'] },
+  { id: 'jeyuk', name: '돼지고기 고추장볶음', minutes: 25,
+    main: [['pork',300,'g'], ['onion',0.5,'개'], ['greenonion',0.5,'대'], ['garlic',3,'쪽']],
+    sauce: [['gochujang',2,'숟가락'], ['chili',1,'숟가락'], ['soy',1,'숟가락'], ['sugar',1,'숟가락'], ['oil',1,'숟가락']],
+    steps: ['{garlic:은} 다지고, {onion:은} 채 썰고, {greenonion:은} 어슷하게 썹니다.',
+      '그릇에 {gochujang}, {chili}, {soy}, {sugar}, 다진 마늘을 넣고 섞어 양념을 만듭니다.',
+      '{pork}에 양념을 넣고 주물러 10분 둡니다.',
+      '팬에 {oil:을} 두르고 중불에서 고기를 5~6분 볶습니다. 타지 않게 자주 뒤적입니다.',
+      '고기가 거의 익으면 양파와 대파를 넣고 2분 더 볶습니다.'] },
+  { id: 'potato-braise', name: '감자조림', minutes: 25,
+    main: [['potato',2,'개'], ['onion',0.5,'개']],
+    sauce: [['soy',3,'숟가락'], ['sugar',1,'숟가락'], ['oil',1,'숟가락']],
+    steps: ['{potato:은} 껍질을 벗겨 주사위 크기(약 2cm)로 썰고 찬물에 한 번 헹굽니다. {onion:은} 비슷한 크기로 썹니다.',
+      '팬에 {oil:을} 두르고 중불에서 감자를 3분 볶습니다.',
+      '물 1컵(종이컵), {soy}, {sugar:을} 넣고 끓입니다.',
+      '끓으면 양파를 넣고 중약불에서 뚜껑을 덮어 10분 조립니다.',
+      '뚜껑을 열고 국물이 거의 없어질 때까지 뒤적이며 더 조립니다. 젓가락이 쑥 들어가면 다 익은 것입니다.'] },
+  { id: 'sprout-soup', name: '콩나물국', minutes: 15,
+    main: [['sprout',200,'g'], ['greenonion',0.5,'대'], ['garlic',2,'쪽']],
+    sauce: [['salt',1,'찻숟가락']],
+    steps: ['{sprout:은} 물에 두세 번 헹궈 건집니다. {garlic:은} 다지고 {greenonion:은} 송송 썹니다.',
+      '냄비에 물 4컵(종이컵)과 콩나물을 넣고 뚜껑을 덮어 센불에서 끓입니다.',
+      '끓어오르면 중불로 줄여 5분 더 끓입니다. 끓는 동안 뚜껑을 열면 비린내가 날 수 있습니다.',
+      '다진 마늘과 {salt:을} 넣고, 대파를 넣어 1분 뒤 불을 끕니다.'] },
+  { id: 'spinach', name: '시금치무침', minutes: 10,
+    main: [['spinach',1,'단'], ['garlic',1,'쪽']],
+    sauce: [['salt',0.5,'찻숟가락'], ['sesameoil',1,'숟가락']],
+    steps: ['{spinach:은} 뿌리 끝을 다듬고 물에 깨끗이 씻습니다.',
+      '끓는 물에 소금을 조금 넣고 시금치를 30초만 데칩니다.',
+      '바로 찬물에 헹궈 물기를 꼭 짜고, 먹기 좋게 두세 번 썹니다.',
+      '다진 {garlic}, {salt}, {sesameoil:을} 넣고 조물조물 무칩니다.'] },
+  { id: 'chicken-braise', name: '닭볶음탕', minutes: 45,
+    main: [['chicken',600,'g'], ['potato',2,'개'], ['carrot',0.5,'개'], ['onion',1,'개'], ['greenonion',1,'대']],
+    sauce: [['gochujang',2,'숟가락'], ['chili',2,'숟가락'], ['soy',4,'숟가락'], ['sugar',1,'숟가락']],
+    steps: ['{chicken:은} 끓는 물에 3분 데친 뒤 찬물에 헹굽니다.',
+      '{potato:과} {carrot:은} 큼직하게, {onion:은} 4등분, {greenonion:은} 5cm 길이로 썹니다.',
+      '냄비에 닭고기, 물 3컵(종이컵), {gochujang}, {chili}, {soy}, {sugar:을} 넣고 센불에서 끓입니다.',
+      '끓어오르면 감자와 당근을 넣고 중불에서 뚜껑을 덮어 20분 끓입니다.',
+      '양파와 대파를 넣고 국물이 자작해질 때까지 5~10분 더 끓입니다.'] },
+  { id: 'beef-radish-soup', name: '소고기무국', minutes: 35,
+    main: [['beef',150,'g'], ['radish',300,'g'], ['greenonion',0.5,'대'], ['garlic',2,'쪽']],
+    sauce: [['sesameoil',1,'숟가락'], ['soy',2,'숟가락'], ['salt',null,'']],
+    steps: ['{radish:은} 3cm 크기로 얇게 썰고, {garlic:은} 다지고, {greenonion:은} 어슷하게 썹니다.',
+      '냄비에 {sesameoil:을} 두르고 중불에서 {beef:을} 3분 볶습니다.',
+      '무를 넣고 2분 더 볶은 뒤 물 5컵(종이컵)을 붓습니다.',
+      '끓어오르면 중약불로 20분 끓입니다. 위에 뜨는 거품은 숟가락으로 걷어냅니다.',
+      '다진 마늘과 {soy:을} 넣고, 모자란 간은 {salt:으로} 맞춥니다. 대파를 넣고 불을 끕니다.'] },
+  { id: 'tuna-bowl', name: '참치마요 덮밥', minutes: 10,
+    main: [['tuna',1,'개'], ['rice',2,'공기'], ['laver',2,'장'], ['onion',0.5,'개']],
+    sauce: [['oil',1,'숟가락'], ['soy',2,'숟가락'], ['sugar',1,'숟가락'], ['mayo',3,'숟가락']],
+    steps: ['{tuna:은} 체에 밭쳐 기름을 뺍니다. {onion:은} 잘게 썹니다.',
+      '팬에 {oil:을} 두르고 중불에서 양파를 2분 볶다가 {soy:과} {sugar:을} 넣고 1분 더 졸입니다.',
+      '그릇에 {rice:을} 담고 볶은 양파와 참치를 올립니다.',
+      '{mayo:을} 뿌리고 {laver:을} 잘게 부숴 올립니다.'] },
+  { id: 'fishcake', name: '어묵볶음', minutes: 15,
+    main: [['fishcake',3,'장'], ['onion',0.5,'개'], ['carrot',0.25,'개']],
+    sauce: [['oil',1,'숟가락'], ['soy',1.5,'숟가락'], ['sugar',1,'숟가락']],
+    steps: ['{fishcake:은} 길쭉하게 썰고, {onion:과} {carrot:은} 채 썹니다.',
+      '팬에 {oil:을} 두르고 중불에서 양파와 당근을 2분 볶습니다.',
+      '어묵을 넣고 2분 볶다가 {soy}, {sugar}, 물 3숟가락을 넣습니다.',
+      '국물이 거의 없어질 때까지 1~2분 더 볶습니다.'] },
+  { id: 'zucchini-pancake', name: '애호박전', minutes: 20,
+    main: [['zucchini',1,'개'], ['egg',2,'개'], ['flour',0.5,'컵']],
+    sauce: [['salt',0.5,'찻숟가락'], ['oil',3,'숟가락']],
+    steps: ['{zucchini:은} 0.5cm 두께로 동그랗게 썰고 {salt:을} 뿌려 10분 둡니다.',
+      '물기를 키친타월로 닦고 {flour:을} 앞뒤로 얇게 묻힙니다.',
+      '{egg:을} 그릇에 풀고, 애호박을 담갔다 꺼냅니다.',
+      '팬에 {oil:을} 두르고 중약불에서 앞뒤로 2분씩 노릇하게 부칩니다.'] },
+  { id: 'chive-pancake', name: '부추전', minutes: 20,
+    main: [['chive',1,'줌'], ['onion',0.5,'개'], ['flour',1,'컵']],
+    sauce: [['salt',0.5,'찻숟가락'], ['oil',4,'숟가락']],
+    steps: ['{chive:은} 5cm 길이로 썰고 {onion:은} 얇게 채 썹니다.',
+      '그릇에 {flour}, 찬물 1컵(종이컵), {salt:을} 넣고 덩어리 없이 섞습니다.',
+      '부추와 양파를 넣고 반죽이 고루 묻게 섞습니다.',
+      '팬에 {oil:을} 넉넉히 두르고 중불에서 반죽을 얇게 펴 앞뒤로 3분씩 바삭하게 부칩니다.'] },
+  { id: 'tteokbokki', name: '떡볶이', minutes: 20,
+    main: [['ricecake',300,'g'], ['fishcake',2,'장'], ['greenonion',1,'대'], ['cabbage',1,'줌']],
+    sauce: [['gochujang',2,'숟가락'], ['chili',1,'숟가락'], ['sugar',2,'숟가락'], ['soy',1,'숟가락']],
+    steps: ['{ricecake:은} 물에 10분 담가 말랑하게 합니다. {fishcake:은} 삼각형으로, {cabbage:은} 한입 크기로, {greenonion:은} 5cm 길이로 썹니다.',
+      '냄비에 물 2컵(종이컵), {gochujang}, {chili}, {sugar}, {soy:을} 넣고 풀어 센불에서 끓입니다.',
+      '끓어오르면 떡, 어묵, 양배추를 넣고 중불에서 자주 저으며 7~8분 끓입니다.',
+      '국물이 걸쭉해지면 대파를 넣고 1분 뒤 불을 끕니다.'] },
+  { id: 'tomato-egg', name: '토마토 계란볶음', minutes: 10,
+    main: [['tomato',2,'개'], ['egg',3,'개'], ['greenonion',0.5,'대']],
+    sauce: [['oil',2,'숟가락'], ['salt',0.5,'찻숟가락'], ['sugar',1,'찻숟가락']],
+    steps: ['{tomato:은} 한입 크기로 썰고 {greenonion:은} 송송 썹니다. {egg:은} 그릇에 풀어 둡니다.',
+      '팬에 {oil}의 절반을 두르고 중불에서 계란을 부드럽게 익혀 그릇에 덜어 둡니다.',
+      '같은 팬에 남은 식용유를 두르고 대파를 30초, 토마토를 2분 볶습니다.',
+      '계란을 다시 넣고 {salt:과} {sugar:으로} 간을 맞춰 30초 더 볶습니다.'] },
+  { id: 'mushroom', name: '버섯볶음', minutes: 10,
+    main: [['mushroom',200,'g'], ['onion',0.5,'개'], ['garlic',2,'쪽']],
+    sauce: [['oil',1,'숟가락'], ['soy',1,'숟가락'], ['salt',null,''], ['sesameoil',1,'찻숟가락']],
+    steps: ['{mushroom:은} 먹기 좋게 찢거나 썰고, {onion:은} 채 썰고, {garlic:은} 얇게 썹니다.',
+      '팬에 {oil:을} 두르고 중불에서 마늘과 양파를 1분 볶습니다.',
+      '버섯을 넣고 숨이 죽을 때까지 3분 볶다가 {soy:을} 넣습니다.',
+      '싱거우면 {salt:으로} 간하고, 불을 끈 뒤 {sesameoil:을} 두릅니다.'] },
+  { id: 'cucumber', name: '오이무침', minutes: 20,
+    main: [['cucumber',1,'개'], ['onion',0.25,'개']],
+    sauce: [['salt',1,'찻숟가락'], ['chili',1,'숟가락'], ['sugar',1,'숟가락'], ['vinegar',1,'숟가락']],
+    steps: ['{cucumber:은} 얇게 동그랗게 썰고 {salt:을} 뿌려 10분 절입니다.',
+      '절인 오이를 손으로 꼭 짜 물기를 뺍니다. {onion:은} 얇게 채 썹니다.',
+      '{chili}, {sugar}, {vinegar:을} 넣고 고루 무칩니다. 먹기 직전에 무치면 물이 덜 생깁니다.'] },
+  { id: 'noodle-soup', name: '잔치국수', minutes: 25,
+    main: [['noodle',200,'g'], ['zucchini',0.33,'개'], ['egg',1,'개'], ['laver',1,'장']],
+    sauce: [['soy',2,'숟가락'], ['salt',null,''], ['oil',1,'숟가락']],
+    steps: ['냄비에 물 5컵(종이컵)을 끓이고 {soy:으로} 간한 뒤, 모자란 간은 {salt:으로} 맞춥니다. 이것이 국물입니다.',
+      '{zucchini:은} 채 썰어 {oil:을} 두른 팬에 1분 볶습니다. {egg:은} 얇게 부쳐 채 썹니다. {laver:은} 가위로 잘게 자릅니다.',
+      '다른 냄비에 물을 넉넉히 끓여 {noodle:을} 넣고 3~4분 삶습니다. 끓어 넘치려 하면 찬물을 반 컵 붓습니다.',
+      '삶은 면을 찬물에 비벼 헹구고 물기를 뺍니다.',
+      '그릇에 면을 담고 뜨거운 국물을 부은 뒤 애호박, 계란, 김을 올립니다.'] },
+  { id: 'ham-rice', name: '햄 채소볶음밥', minutes: 15,
+    main: [['ham',100,'g'], ['rice',2,'공기'], ['onion',0.5,'개'], ['carrot',0.25,'개'], ['egg',2,'개']],
+    sauce: [['oil',2,'숟가락'], ['salt',0.5,'찻숟가락']],
+    steps: ['{ham}, {onion}, {carrot:은} 잘게 썹니다.',
+      '팬에 {oil:을} 두르고 중불에서 당근과 양파를 2분 볶다가 햄을 넣고 1분 더 볶습니다.',
+      '{rice:을} 넣고 주걱으로 밥알을 풀며 3분 볶습니다.',
+      '밥을 한쪽으로 밀고 빈 곳에 {egg:을} 깨 넣어 휘저어 익힌 뒤 밥과 섞습니다.',
+      '{salt:으로} 간을 맞춥니다.'] },
+];
+
+// ===== 양과 조사 =====
+const FRACTIONS = { 0.25: '¼', 0.33: '⅓', 0.5: '½', 0.75: '¾' };
+function amountText(qty, unit) {
+  if (qty == null) return '약간';
+  const whole = Math.floor(qty), rest = Math.round((qty - whole) * 100) / 100;
+  if (rest === 0) return `${whole}${unit}`;
+  if (whole === 0) return `${FRACTIONS[rest] || qty}${unit}`;
+  if (rest === 0.5) return `${whole}${unit} 반`;
+  return `${qty}${unit}`;
+}
+const itemText = ([id, qty, unit]) => `${ING[id].name} ${amountText(qty, unit)}`;
+// 마지막 글자의 받침으로 조사 고르기 (숫자·g 포함)
+function batchim(text) {
+  const c = text.trim().slice(-1);
+  const code = c.charCodeAt(0);
+  if (code >= 0xAC00 && code <= 0xD7A3) { const j = (code - 0xAC00) % 28; return j === 0 ? 'none' : j === 8 ? 'rieul' : 'yes'; }
+  if (c === 'g') return 'yes';                       // 그램
+  return { '0': 'yes', '1': 'rieul', '2': 'none', '3': 'yes', '4': 'none', '5': 'none', '6': 'yes', '7': 'rieul', '8': 'rieul', '9': 'none' }[c] || 'none';
+}
+const JOSA = { '을': ['을', '를'], '은': ['은', '는'], '과': ['과', '와'], '이': ['이', '가'] };
+function josa(text, kind) {
+  const b = batchim(text);
+  if (kind === '으로') return b === 'yes' ? '으로' : '로';
+  const pair = JOSA[kind];
+  return pair ? (b === 'none' ? pair[1] : pair[0]) : kind;
+}
+function stepText(recipe, step) {
+  const all = [...recipe.main, ...recipe.sauce];
+  return step.replace(/\{(\w+)(?::([^}]+))?\}/g, (m, id, kind) => {
+    const item = all.find(x => x[0] === id);
+    const t = item ? itemText(item) : (ING[id] ? ING[id].name : id);
+    return kind ? t + josa(t, kind) : t;
+  });
+}
+const mainIds = r => r.main.map(x => x[0]);
+
+// 처음 화면에 바로 보여줄 자주 쓰는 재료
+const FREQUENT = ['egg','onion','greenonion','garlic','potato','carrot','tofu','kimchi','rice','pork','zucchini','mushroom'];
+
+// 직접 쓴 이름을 목록 재료로 맞추기 (다른 이름 → 재료 id)
+const ALIASES = {
+  '파': 'greenonion', '쪽파': 'greenonion', '달걀': 'egg', '계란': 'egg',
+  '돼지': 'pork', '삼겹살': 'pork', '목살': 'pork', '앞다리살': 'pork', '돼지고기': 'pork',
+  '쇠고기': 'beef', '소고기': 'beef', '불고기감': 'beef', '국거리': 'beef',
+  '닭': 'chicken', '닭다리': 'chicken', '닭가슴살': 'chicken', '닭고기': 'chicken',
+  '참치': 'tuna', '오뎅': 'fishcake', '스팸': 'ham', '소시지': 'ham',
+  '다진마늘': 'garlic', '통마늘': 'garlic', '호박': 'zucchini', '무우': 'radish',
+  '표고': 'mushroom', '표고버섯': 'mushroom', '느타리': 'mushroom', '느타리버섯': 'mushroom',
+  '팽이': 'mushroom', '팽이버섯': 'mushroom', '새송이': 'mushroom', '새송이버섯': 'mushroom',
+  '배추김치': 'kimchi', '묵은지': 'kimchi', '햇반': 'rice', '쌀밥': 'rice', '찬밥': 'rice',
+  '국수': 'noodle', '국수면': 'noodle', '밀가루': 'flour', '튀김가루': 'flour', '떡볶이떡': 'ricecake',
+  '고추가루': 'chili', '방울토마토': 'tomato', '김밥김': 'laver', '조미김': 'laver',
+};
+function findIngredient(raw) {
+  const t = raw.replace(/\s+/g, '');
+  if (!t) return null;
+  if (ALIASES[t]) return ALIASES[t];
+  const exact = INGREDIENTS.find(i => i.name === t);
+  return exact ? exact.id : null;
+}
+
+// ===== 저장 (브라우저 안에만 저장) =====
+// 목록 재료는 id("onion"), 직접 쓴 재료는 "c:이름" 으로 저장
+const KEY = 'fridge.v1';
+let memoryFallback = [];
+const isCustom = v => typeof v === 'string' && v.startsWith('c:');
+function loadFridge() {
+  try {
+    const raw = localStorage.getItem(KEY);
+    const list = raw ? JSON.parse(raw) : [];
+    return Array.isArray(list) ? list.filter(v => ING[v] || (isCustom(v) && v.length > 2)) : [];
+  } catch (e) { return memoryFallback.slice(); }
+}
+function saveFridge() {
+  memoryFallback = [...fridge];
+  try { localStorage.setItem(KEY, JSON.stringify(memoryFallback)); } catch (e) { /* 저장이 막힌 환경: 메모리에만 둔다 */ }
+}
+let fridge = new Set(loadFridge());
+const labelOf = v => isCustom(v) ? v.slice(2) : ING[v].name;
+const knownCount = () => [...fridge].filter(v => ING[v]).length;
+
+// ===== 맞춤 계산 (주재료만 본다) =====
+function matchRecipes() {
+  return RECIPES.map(r => ({
+    r,
+    have: mainIds(r).filter(id => fridge.has(id)),
+    missing: mainIds(r).filter(id => !fridge.has(id)),
+  }))
+  .filter(m => m.have.length > 0)
+  .sort((a, b) => a.missing.length - b.missing.length || b.have.length - a.have.length);
+}
+const ready = () => matchRecipes().filter(m => m.missing.length === 0);
+const almost = () => matchRecipes().filter(m => m.missing.length >= 1 && m.missing.length <= 2);
+
+// ===== 화면 상태 =====
+const app = document.getElementById('app');
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const names = ids => ids.map(id => ING[id].name).join(', ');
+let showMore = false;      // 다른 재료 펼침
+let showAlmost = false;    // 모자란 요리 펼침
+let message = null;        // 직접 쓰기 결과 안내 { text, warn }
+
+// ===== S00 표지 =====
+function viewStart() {
+  return `<section class="hero" role="img" aria-label="나무 식탁 위에 놓인 계란, 양파, 대파, 두부">
+      <div class="hero-text">
+        <p class="eyebrow">재료 3개면 충분해요</p>
+        <h1>오늘 냉장고로 뭐 해 먹을까요?</h1>
+        <p class="sub">있는 재료를 누르면 만들 수 있는 요리를 찾아 드립니다</p>
+      </div>
+    </section>
+    <div class="start-card">
+      <p>장 보러 가기 전에, 냉장고에 있는 걸로 먼저 한 끼 해결해 보세요.</p>
+      <ol class="steps3">
+        <li><strong>고르기</strong><span>있는 재료</span></li>
+        <li><strong>찾기</strong><span>되는 요리</span></li>
+        <li><strong>만들기</strong><span>따라 하기</span></li>
+      </ol>
+      <p class="muted">고른 재료는 이 휴대폰(브라우저)에만 저장되고, 다음에 열면 이어서 쓸 수 있어요.</p>
+    </div>
+    <div class="start-go"><a class="btn btn-block" href="#/pick">${fridge.size ? `이어서 하기 (고른 재료 ${fridge.size}개)` : '시작하기'}</a></div>`;
+}
+
+// ===== S01 재료 고르기 =====
+function toggleButton(i) {
+  const on = fridge.has(i.id);
+  return `<button class="toggle" data-toggle="${i.id}" aria-pressed="${on}">
+    <span class="mark" aria-hidden="true">${on ? '✓' : ''}</span>${esc(i.name)}</button>`;
+}
+
+function viewPick() {
+  const picked = [...fridge];
+  const pickedBox = picked.length
+    ? `<p class="muted" style="margin:0 0 var(--s-3)">누르면 빠집니다.</p>
+       <div class="chips">${picked.map(v => `<button class="chip ${isCustom(v) ? 'chip-custom' : ''}" data-remove="${esc(v)}" aria-label="${esc(labelOf(v))} 빼기">${esc(labelOf(v))} <span class="x" aria-hidden="true">✕</span></button>`).join('')}</div>`
+    : `<p style="margin:0" class="muted">아직 고른 재료가 없어요.</p>`;
+
+  const others = CATS.map(c => {
+    const list = INGREDIENTS.filter(i => i.cat === c.id && !FREQUENT.includes(i.id));
+    const allSauce = c.id === 'sauce'
+      ? `<button class="btn-secondary btn-block" data-all-sauce style="margin-bottom:var(--s-3)">양념 전부 넣기</button>` : '';
+    return `<p class="cat-label">${c.name}</p>${allSauce}<div class="grid">${list.map(toggleButton).join('')}</div>`;
+  }).join('');
+
+  const n = ready().length;
+  return `<h1>재료 고르기</h1>
+    <div class="guide"><ol>
+      <li>집에 있는 재료를 누르세요.</li>
+      <li>맨 아래 초록 버튼을 누르면 만들 수 있는 요리가 나와요.</li>
+    </ol></div>
+
+    <section class="card picked" aria-live="polite">
+      <h2>내가 고른 재료 ${picked.length}개</h2>
+      ${pickedBox}
+    </section>
+
+    <h2>자주 쓰는 재료</h2>
+    <div class="grid">${FREQUENT.map(id => toggleButton(ING[id])).join('')}</div>
+
+    <button class="btn-secondary btn-block more" data-more aria-expanded="${showMore}">
+      ${showMore ? '다른 재료 접기' : '다른 재료 더 보기'}</button>
+    ${showMore ? others : ''}
+
+    <h2>목록에 없으면 직접 쓰세요</h2>
+    <form data-write>
+      <label class="field" for="w">재료 이름</label>
+      <div class="write-row">
+        <input id="w" type="text" placeholder="예: 연근" autocomplete="off" enterkeyhint="done">
+        <button type="submit">넣기</button>
+      </div>
+      ${message ? `<p class="msg ${message.warn ? 'warn' : ''}" role="status">${esc(message.text)}</p>` : ''}
+    </form>
+
+    <a class="btn btn-block go" href="#/recipes">② 만들 수 있는 요리 보기${n ? ` (${n}개)` : ''}</a>`;
+}
+
+// ===== S02 요리 보기 =====
+function recipeCard(m) {
+  const r = m.r;
+  const status = m.missing.length === 0
+    ? `<span class="status ok">✓ 바로 만들 수 있어요</span>`
+    : `<span class="status lack">${esc(names(m.missing))}만 있으면 돼요</span>`;
+  return `<button class="recipe-card" data-open="${r.id}">
+    <span class="name">${esc(r.name)}</span>
+    <span class="meta">${SERVINGS}인분 · 약 ${r.minutes}분</span>
+    ${status}
+  </button>`;
+}
+
+function viewRecipes() {
+  if (knownCount() === 0) {
+    return `<h1>만들 수 있는 요리</h1>
+      <div class="card empty">
+        <p>${fridge.size ? '직접 쓴 재료로 만들 수 있는 요리는 아직 없어요.<br>양파, 계란처럼 목록에 있는 재료를 골라 보세요.' : '아직 고른 재료가 없어요.<br>먼저 집에 있는 재료를 골라 주세요.'}</p>
+        <a class="btn btn-block" href="#/pick">① 재료 고르러 가기</a>
+      </div>`;
+  }
+  const a = ready(), b = almost();
+  const openAlmost = showAlmost || a.length === 0;
+  const top = a.length
+    ? `<p class="muted">고른 재료만으로 만들 수 있는 요리예요. (양념은 빼고 봤어요)</p>${a.map(recipeCard).join('')}`
+    : `<div class="note"><p style="margin:0">고른 재료만으로 바로 만들 수 있는 요리는 아직 없어요.</p></div>`;
+  let rest = '';
+  if (b.length && openAlmost) {
+    rest = `<h2>재료가 조금 모자란 요리 ${b.length}개</h2>${b.map(recipeCard).join('')}`;
+  } else if (b.length) {
+    rest = `<button class="btn-secondary btn-block more" data-almost>재료가 조금 모자란 요리 보기 (${b.length}개)</button>`;
+  }
+  const none = !a.length && !b.length
+    ? `<p class="muted" style="margin-top:var(--s-4)">양파, 계란, 대파처럼 자주 쓰는 재료를 더 골라 보세요.</p>` : '';
+  return `<h1>바로 만들 수 있는 요리 ${a.length}개</h1>
+    ${top}${rest}${none}
+    <a class="btn btn-secondary btn-block" style="margin-top:var(--s-6)" href="#/pick">① 재료 더 고르기</a>`;
+}
+
+// ===== S03 레시피 보기 =====
+function checkList(items) {
+  return `<ul class="checks card">${items.map(([id, qty, unit]) => {
+    const on = fridge.has(id);
+    return `<li class="${on ? '' : 'no'}"><span><strong>${esc(ING[id].name)}</strong> <span class="amt">${esc(amountText(qty, unit))}</span></span>
+      <span class="${on ? 'have' : 'lack'}">${on ? '✓ 있음' : '✗ 없음'}</span></li>`;
+  }).join('')}</ul>`;
+}
+
+function viewRecipe(id) {
+  const r = RECIPES.find(x => x.id === id);
+  if (!r) return `<h1>요리를 찾을 수 없어요</h1><a class="btn btn-block" href="#/recipes">요리 목록으로</a>`;
+  const missing = mainIds(r).filter(x => !fridge.has(x));
+  return `<a class="back" href="#/recipes">← 요리 목록으로</a>
+    <h1>${esc(r.name)}</h1>
+    <p class="muted">${SERVINGS}인분 · 약 ${r.minutes}분</p>
+    <p class="status ${missing.length ? 'lack' : 'ok'}" style="border-radius:var(--r-md);padding:var(--s-3) var(--s-4)">
+      ${missing.length ? `${esc(names(missing))}만 있으면 만들 수 있어요` : '✓ 지금 있는 재료로 만들 수 있어요'}</p>
+    <div class="note measure">
+      <p><strong>계량 기준</strong></p>
+      <p>숟가락 = 밥숟가락 (약 15ml)<br>찻숟가락 = 티스푼 (약 5ml)<br>컵 = 종이컵 (약 180ml)</p>
+    </div>
+    <h2>주재료 (${SERVINGS}인분)</h2>${checkList(r.main)}
+    <h2>양념</h2>${checkList(r.sauce)}
+    <h2>만드는 순서</h2>
+    <ol class="steps">${r.steps.map(s => `<li>${esc(stepText(r, s))}</li>`).join('')}</ol>
+    <p class="note">간은 맛을 보면서 입맛에 맞게 조절하세요.</p>
+    <a class="btn btn-secondary btn-block" href="#/recipes">다른 요리 보기</a>`;
+}
+
+// ===== 화면 이동 =====
+const homeHash = () => '#/start';   // 열 때마다 표지가 먼저 (템플릿 시작 화면과 같다)
+let current = location.hash || homeHash();
+function go(hash) {
+  current = hash;
+  try { history.pushState(null, '', hash); } catch (e) { /* 주소를 못 바꾸는 환경: 화면만 바꾼다 */ }
+  message = null; showAlmost = false;
+  route(); window.scrollTo(0, 0); app.focus({ preventScroll: true });
+}
+function route() {
+  const hash = current;
+  const [, page, arg] = hash.split('/');
+  let html, tab;
+  if (page === 'recipes') { html = viewRecipes(); tab = 'recipes'; }
+  else if (page === 'recipe') { html = viewRecipe(decodeURIComponent(arg || '')); tab = 'recipes'; }
+  else if (page === 'start') { html = viewStart(); }
+  else { html = viewPick(); tab = 'pick'; }   // 예전 주소(#/fridge, #/add)도 여기로
+  document.body.classList.toggle('is-start', page === 'start');
+  app.innerHTML = html;
+  document.querySelectorAll('nav.bottom a').forEach(a =>
+    a.dataset.tab === tab ? a.setAttribute('aria-current', 'page') : a.removeAttribute('aria-current'));
+}
+function rerender(focusSelector) {
+  const y = window.scrollY;
+  route();
+  window.scrollTo(0, y);
+  if (focusSelector) { const el = app.querySelector(focusSelector); if (el) el.focus({ preventScroll: true }); }
+}
+
+function addWritten(raw) {
+  const text = raw.trim().replace(/\s+/g, ' ');
+  if (!text) { message = { text: '재료 이름을 써 주세요.', warn: true }; return; }
+  if (text.length > 20) { message = { text: '이름이 너무 길어요. 20자 안으로 써 주세요.', warn: true }; return; }
+  const id = findIngredient(text);
+  if (id) {
+    if (fridge.has(id)) { message = { text: `이미 골랐어요: ${ING[id].name}` }; return; }
+    fridge.add(id); saveFridge();
+    message = { text: `넣었어요: ${ING[id].name}` };
+    return;
+  }
+  const key = 'c:' + text;
+  if (fridge.has(key)) { message = { text: `이미 넣었어요: ${text}` }; return; }
+  fridge.add(key); saveFridge();
+  message = { text: `넣었어요: ${text}. 다만 이 재료가 들어간 요리는 아직 없어요.`, warn: true };
+}
+
+app.addEventListener('click', e => {
+  const el = e.target.closest('button');
+  if (!el || el.form) return;   // 직접 쓰기 칸의 '넣기'는 submit에서 처리
+  message = null;
+  if (el.dataset.toggle) {
+    const id = el.dataset.toggle;
+    fridge.has(id) ? fridge.delete(id) : fridge.add(id);
+    saveFridge(); rerender(`[data-toggle="${id}"]`);
+  } else if (el.dataset.remove) {
+    fridge.delete(el.dataset.remove); saveFridge(); rerender();
+  } else if ('more' in el.dataset) {
+    showMore = !showMore; rerender('[data-more]');
+  } else if ('allSauce' in el.dataset) {
+    INGREDIENTS.filter(i => i.cat === 'sauce').forEach(i => fridge.add(i.id));
+    saveFridge(); rerender('[data-all-sauce]');
+  } else if ('almost' in el.dataset) {
+    showAlmost = true; rerender();
+  } else if (el.dataset.open) {
+    go(`#/recipe/${el.dataset.open}`);
+  }
+});
+app.addEventListener('submit', e => {
+  if (!e.target.matches('[data-write]')) return;
+  e.preventDefault();
+  addWritten(e.target.querySelector('#w').value);
+  rerender('#w');
+});
+// '#/'로 시작하는 링크는 모두 go()로 처리
+document.addEventListener('click', e => {
+  const a = e.target.closest('a[href^="#/"]');
+  if (!a) return;
+  e.preventDefault();
+  go(a.getAttribute('href'));
+});
+window.addEventListener('popstate', () => {
+  current = location.hash || homeHash();
+  message = null; showAlmost = false;
+  route(); window.scrollTo(0, 0);
+});
+route();
+</script>
+<script src="../assets/maker.js"></script>
+</body>
+</html>

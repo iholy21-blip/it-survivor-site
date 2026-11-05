@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>만드는 과정 | 25년차 IT생존러</title>
+<meta name="description" content="개발 경험 없이 AI로 앱을 만들며 막힌 곳과 푼 방법을 적었습니다.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="만드는 과정 | 25년차 IT생존러">
+<meta property="og:description" content="개발 경험 없이 AI로 앱을 만들며 막힌 곳과 푼 방법을 적었습니다.">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body data-page="making">
+<!-- 메뉴에는 넣지 않는 페이지. 상단 메뉴 Making에서 링크. 지원할 때 이 주소를 보낸다. -->
+<main class="wrap">
+  <section class="page-head">
+    <p class="eyebrow">MAKING</p>
+    <h1>비전공자가 AI로<br>앱을 만든 과정</h1>
+    <p>디지털 광고 25년, 개발 경험 없이 시작했습니다.<br>막힌 곳과 푼 방법을 적어 둡니다.</p>
+  </section>
+
+  <section class="split">
+    <div><p class="eyebrow">STUCK &amp; SOLVED</p><h2>막힌 곳 3개,<br>이렇게 풀었습니다</h2><p class="sub">비전공자가 처음 부딪히는 곳은 대부분 비슷합니다.</p></div>
+    <dl class="history">
+      <dt>01 · 도구</dt><dd><b>대화만으로는 만드는 데 한계가 있었다</b><br>Claude Code와 스킬을 쓰기 시작했습니다. 앱은 Claude가 잘 이끌어 줘서 크게 막히지 않았습니다.</dd>
+      <dt>02 · 정보</dt><dd><b>어떤 스킬이 있는지 몰랐다</b><br>스킬의 종류는 유튜브 영상과 인스타 DM에서 얻었고, 쓰는 법은 Claude에게 물어 배웠습니다.</dd>
+      <dt>03 · 디자인</dt><dd><b>웹사이트 디자인은 메시지로 전달하는 데 한계가 있었다</b><br>벤치마킹 사이트를 찾아, Claude가 덤브란트(Dembrandt)로 글꼴·여백·레이아웃까지 정리해 디자인 가이드를 만들었습니다.</dd>
+    </dl>
+  </section>
+
+  <section class="split">
+    <div><p class="eyebrow">HOW I BUILT</p><h2>만든 방식 5가지</h2><p class="sub">앱을 하나씩 따로 만들지 않고, 같은 방식으로 묶었습니다.</p></div>
+    <ul class="rows">
+      <li><b>틀 하나 · 동작 하나 · 내용 파일</b> — 테스트마다 따로 만들지 않고, 디자인 틀과 동작을 하나씩 두고 내용 파일만 바꿨습니다.</li>
+      <li><b>가벼운 글꼴</b> — Pretendard에서 실제로 쓰인 글자만 추려 파일 크기를 줄였습니다.</li>
+      <li><b>AI 이미지</b> — Gemini API를 연동해 Claude가 자동으로 이미지를 만들었습니다.</li>
+      <li><b>결과 문구 원칙</b> — 장점부터 쓰고, 비혼·반려동물 가족도 고를 수 있는 보기를 넣었습니다.</li>
+      <li><b>저장 방식</b> — 입력한 내용은 서버로 보내지 않습니다. 간병 일지만 기록이 이 기기에 남습니다.</li>
+    </ul>
+  </section>
+
+  <section class="split">
+    <div><p class="eyebrow">APP NOTES</p><h2>앱마다 고민한 것</h2><p class="sub">만들면서 바꾸고 확인한 부분입니다.</p></div>
+    <dl class="history">
+      <dt>말투 유형</dt><dd>무작위로 답을 넣어 시뮬레이션해, 유형별 비율이 12~20%로 한 유형에 몰리지 않는지 확인했습니다.</dd>
+      <dt>신년운세</dt><dd>질문에 답하는 방식이 아니라 생년월일을 넣는 방식이라 동작을 따로 만들었습니다. 사업운은 나중에 넣었습니다.</dd>
+      <dt>디지털 생활 점수</dt><dd>약한 문항이 같으면 사기 대처를 먼저 “이번 달 할 일”로 보여 줍니다. 상담 번호는 112·118·1332만 썼습니다.</dd>
+      <dt>간병 일지</dt><dd>입력할 것이 많아, 병원용 “최근 7일 복사”에 호흡수 평균·최저·최고를 맨 위에 붙였습니다.</dd>
+      <dt>펫로스</dt><dd>반려동물 애도 척도(PBQ)의 세 축을 바탕으로, 보기를 “없었어요 / 며칠 / 일주일 넘게 / 거의 매일”처럼 날수로 바꿨습니다.</dd>
+      <dt>혈액검사</dt><dd>결과를 복사할 때 입력하지 않은 수치는 빼고 복사하도록 했습니다.</dd>
+    </dl>
+  </section>
+
+</main>
+<script src="assets/site.js"></script>
+</body>
+</html>

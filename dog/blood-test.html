@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>강아지 혈액검사 해독기 | 노견 생존 데이터</title>
+<meta property="og:type" content="website">
+<meta property="og:title" content="강아지 혈액검사 해독기 | 노견 생존 데이터">
+<meta property="og:description" content="강아지 혈액검사 수치를 입력하면 결과를 쉬운 말로 알려 드립니다">
+<!-- og:image, og:url 은 배포 주소가 정해지면 절대 주소로 추가 -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pretendard@1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Apple SD Gothic Neo','Noto Sans KR',sans-serif;background:#FBF6F3;color:#2E2724;line-height:1.7;padding:20px 16px 60px;min-height:100vh}
+.wrap{max-width:720px;margin:0 auto}
+.hero{text-align:center;padding:32px 16px;background:linear-gradient(135deg,#B4532A 0%,#8A3D1E 100%);border:none;border-radius:14px;margin-bottom:16px}
+.paw{font-size:40px;display:block;margin-bottom:10px;animation:pulse 2.5s ease-in-out infinite}
+@keyframes pulse{0%,100%{transform:scale(1)}50%{transform:scale(1.08)}}
+.hero h1{font-size:22px;font-weight:700;color:#ffffff;margin-bottom:6px}
+.hero p{font-size:13px;color:rgba(255,255,255,0.88);margin-bottom:8px}
+.badge{display:inline-block;background:rgba(255,255,255,0.2);color:#ffffff;border-radius:20px;font-size:12px;font-weight:700;padding:4px 14px;border:1px solid rgba(255,255,255,0.4)}
+.disclaimer{background:#FCEEE7;border:1px solid #F5C87A;border-radius:10px;padding:13px 16px;font-size:12px;color:#7A6F6A;margin-bottom:16px;line-height:1.7}
+.disclaimer strong{color:#8A3D1E}
+.card{background:#FAFEFE;border:1px solid #F6D5C5;border-radius:14px;padding:22px 18px;margin-bottom:16px}
+.ct{font-size:14px;font-weight:700;color:#B4532A;margin-bottom:14px}
+.fg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:6px}
+@media(max-width:500px){.fg{grid-template-columns:1fr 1fr}}
+label{display:block;font-size:11px;font-weight:700;color:#7A6F6A;margin-bottom:4px}
+input[type=text],input[type=number]{width:100%;padding:9px 11px;border:1px solid #F6D5C5;border-radius:8px;font-size:14px;background:#FDF5F1;color:#2E2724;font-family:inherit}
+input:focus{outline:none;border-color:#B4532A;box-shadow:0 0 0 3px rgba(180,83,42,.12)}
+.uz{border:2px dashed #F6D5C5;border-radius:14px;padding:24px 16px;text-align:center;cursor:pointer;background:#FDF5F1;transition:all .2s;margin-bottom:10px}
+.uz:hover{border-color:#B4532A;background:#FAE6DC}
+.uz p{font-size:13px;color:#7A6F6A}
+.uz strong{color:#B4532A}
+.hint{display:inline-block;background:#FAE6DC;border-radius:6px;padding:5px 12px;font-size:12px;margin-top:8px;color:#7A6F6A;line-height:1.5}
+.pl{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.pl img{max-height:80px;max-width:120px;border-radius:8px;border:1px solid #F6D5C5;object-fit:cover}
+.os{margin-top:8px;font-size:12px;color:#7A6F6A;min-height:18px}
+.op{height:5px;background:#F6D5C5;border-radius:4px;margin-top:6px;overflow:hidden;display:none}
+.ob{height:100%;background:#B4532A;border-radius:4px;width:0%;transition:width .3s}
+.note{background:#FAE6DC;border-radius:8px;padding:9px 13px;font-size:12px;color:#7A6F6A;margin-top:10px;line-height:1.6}
+.divtxt{text-align:center;color:#7A6F6A;font-size:12px;font-weight:700;margin:18px 0;position:relative}
+.divtxt::before,.divtxt::after{content:'';position:absolute;top:50%;width:36%;height:1px;background:#F6D5C5}
+.divtxt::before{left:0}.divtxt::after{right:0}
+.stitle{font-size:12px;font-weight:700;color:#7A6F6A;margin:14px 0 8px;padding-bottom:5px;border-bottom:1px solid #F6D5C5}
+.mg{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px}
+@media(max-width:500px){.mg{grid-template-columns:1fr 1fr}}
+.iu{position:relative}
+.iu input{padding-right:50px}
+.ul{position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:11px;color:#7A6F6A;font-weight:600;pointer-events:none}
+.range-hint{font-size:10px;color:#9A93C8;margin-top:3px}
+.btn{width:100%;padding:14px;background:linear-gradient(135deg,#B4532A,#8A3D1E);color:#fff;border:none;border-radius:14px;font-size:16px;font-weight:700;cursor:pointer;margin-top:12px;font-family:inherit;transition:all .2s;box-shadow:0 4px 14px rgba(180,83,42,0.35)}
+.btn:hover{background:#8A3D1E;transform:translateY(-1px)}
+.lo{display:none;text-align:center;padding:40px}
+.spin{font-size:36px;animation:spin 1s linear infinite;display:inline-block}
+@keyframes spin{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.lt{margin-top:12px;font-size:14px;color:#7A6F6A}
+.rs{display:none;animation:fadeIn .5s ease}
+@keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.rh{background:linear-gradient(135deg,#B4532A,#8A3D1E);border:none;border-radius:14px;padding:20px;margin-bottom:14px;text-align:center;font-size:17px;font-weight:700;color:#ffffff}
+.sv{background:#FCEEE7;border-left:4px solid #B4532A;border-radius:0 8px 8px 0;padding:16px 18px;margin:14px 0;font-size:14px;font-style:italic;line-height:1.9;color:#2E2724}
+.sv .spk{font-style:normal;font-size:12px;font-weight:700;color:#B4532A;margin-bottom:6px}
+.mc{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:14px}
+@media(max-width:500px){.mc{grid-template-columns:1fr 1fr}}
+.mi{border-radius:10px;padding:13px 14px;border:1px solid}
+.mi.n{background:#E0F5F2;border-color:#A8D8D4}
+.mi.c{background:#FFF3E0;border-color:#F5C87A}
+.mi.d{background:#FAEAEA;border-color:#F0AAAA}
+.mi.u{background:#F4F4F4;border-color:#E0E0E0}
+.mn{font-size:11px;font-weight:700;margin-bottom:3px}
+.mi.n .mn{color:#2A7C6F}.mi.c .mn{color:#B06020}.mi.d .mn{color:#8B2E2E}.mi.u .mn{color:#999}
+.mv{font-size:22px;font-weight:700;margin-bottom:2px}
+.mi.n .mv{color:#2A7C6F}.mi.c .mv{color:#B06020}.mi.d .mv{color:#8B2E2E}.mi.u .mv{color:#bbb}
+.mr{font-size:10px;color:#4A7C75;margin-bottom:4px}
+.mt{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:10px}
+.mi.n .mt{background:#B8E8E4;color:#2A7C6F}.mi.c .mt{background:#FFE0B2;color:#B06020}.mi.d .mt{background:#FACCCC;color:#8B2E2E}.mi.u .mt{background:#E0E0E0;color:#999}
+.ac{border-radius:10px;padding:14px 16px;margin-bottom:10px;border:1px solid}
+.ac.n{background:#E0F5F2;border-color:#A8D8D4}.ac.c{background:#FFF3E0;border-color:#F5C87A}.ac.d{background:#FAEAEA;border-color:#F0AAAA}
+.at{font-size:13px;font-weight:700;margin-bottom:5px}
+.ac.n .at{color:#2A7C6F}.ac.c .at{color:#B06020}.ac.d .at{color:#8B2E2E}
+.ab{font-size:13px;line-height:1.8;color:#1A3330}
+.disc{background:#EEF8F7;border:1px solid #C2E8E4;border-radius:8px;padding:13px 15px;font-size:12px;color:#4A7C75;margin-top:16px;line-height:1.6}
+.rb{width:100%;padding:12px;background:transparent;color:#4A7C75;border:1px solid #C2E8E4;border-radius:14px;font-size:14px;cursor:pointer;margin-top:12px;font-family:inherit;transition:all .2s}
+.rb:hover{border-color:#2A9D8F;color:#2A9D8F}
+
+  /* 노견케어 공통 상단: 사진 위에 제목 (생활 테스트 템플릿과 같은 구성, 코랄) */
+  body, body *:not(.ti) {
+    font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important;
+  }
+  /* 앱 폭을 생활 테스트와 같게(520px). 휴대폰에서는 원래대로 화면 폭을 꽉 채운다 */
+  .app { max-width: 520px !important; margin-left: auto !important; margin-right: auto !important; }
+  .wrap, .stage { max-width: 488px !important; margin-left: auto !important; margin-right: auto !important; }
+  #intro > .dc-hero { margin: -40px -34px 24px; border-radius: 20px 20px 0 0; }
+  /* 브라우저 자동 완성의 하늘색 바탕을 앱 색으로 덮는다 */
+  input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:focus {
+    -webkit-box-shadow: 0 0 0 1000px #FFFDFB inset !important; -webkit-text-fill-color: #2E2A28 !important; transition: background-color 9999s;
+  }
+  .dc-hero { position: relative; border-radius: 20px; overflow: hidden; margin: 0 0 18px; background: #2E2724; }
+  .dc-hero img { display: block; width: 100%; max-width: 100%; aspect-ratio: 4 / 3; object-fit: cover; }
+  .dc-hero::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 30%, rgba(30, 20, 14, .55) 60%, rgba(30, 20, 14, .9) 100%); }
+  .dc-hero-text { position: absolute; left: 0; right: 0; bottom: 0; z-index: 1; display: grid; gap: 6px; padding: 0 20px 18px; color: #fff; text-align: left; text-shadow: 0 1px 10px rgba(0, 0, 0, .45); }
+  .dc-hero-text .dc-eyebrow { font-size: 14px; font-weight: 800; letter-spacing: -.01em; color: #F6B394; }
+  .dc-hero-text h1 { margin: 0; font-size: 30px; font-weight: 800; line-height: 1.25; letter-spacing: -.04em; color: #fff; text-wrap: balance; }
+  .dc-hero-text p { margin: 0; font-size: 15px; font-weight: 500; line-height: 1.5; color: rgba(255, 255, 255, .85); }
+.rb{border:1.5px solid #B4532A !important;color:#8A3D1E !important;font-size:16px !important;font-weight:700;padding:14px !important;}
+.rb:hover{background:#FCEEE7 !important;}
+
+  /* 결과 아래 공통 버튼 (dog/actions.js) */
+  .ra { display: grid; gap: 10px; margin: 22px 0 4px; }
+  .ra button { width: 100%; padding: 16px; border-radius: 16px; font-size: 17px; font-weight: 700; cursor: pointer; font-family: inherit; }
+  .ra-copy { background: #B4532A; color: #fff; border: 0; }
+  .ra-again { background: transparent; color: #8A3D1E; border: 1.5px solid #B4532A; }
+  .ra-toast { margin: 4px 0 0; text-align: center; font-size: 15px; color: #8A3D1E; font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="dc-hero">
+    <img src="../img/dog-blood-test.jpg" alt="혈액검사 결과가 뜬 휴대폰 옆에 누운 말티즈">
+    <div class="dc-hero-text">
+      <span class="dc-eyebrow">노견케어</span>
+      <h1>강아지 혈액검사 해독기</h1>
+      <p>검사지 사진을 올리거나 수치를 직접 입력하면 쉬운 말로 풀어드려요</p>
+    </div>
+  </header>
+
+<div class="disclaimer">
+  <strong>📌 이 도구에 대해 꼭 알아주세요</strong><br>
+  이 해독기는 보호자가 아이의 혈액검사 수치를 <strong>직관적으로 파악</strong>하도록 돕는 보조 도구예요. 의학적 진단·처방·치료 지침은 일절 포함되어 있지 않아요. 모든 결과는 반드시 담당 수의사 선생님과 상담하세요.
+</div>
+
+<div class="card" id="IS">
+  <div class="ct">🐕 아이 정보</div>
+  <div class="fg">
+    <div><label>강아지 이름</label><input type="text" id="dN" placeholder="예) 콩이" maxlength="10"></div>
+    <div><label>나이</label><input type="number" id="dA" placeholder="예) 12" min="0" max="25"></div>
+    <div><label>품종</label><input type="text" id="dB" placeholder="예) 말티즈" maxlength="15"></div>
+  </div>
+
+  <div class="ct" style="margin-top:12px">📷 검사지 사진 업로드</div>
+  <div class="uz" id="UZ">
+    <p style="font-size:32px;margin-bottom:8px">📋</p>
+    <p><strong>사진을 여기에 끌어다 놓거나 클릭해서 선택</strong></p>
+    <p style="margin-top:4px">JPG · PNG · 최대 5장</p>
+    <span class="hint">💡 여러 장: Ctrl(윈도우) / Cmd(맥) 누른 채 클릭</span>
+  </div>
+  <input type="file" id="FI" accept="image/*" multiple style="display:none">
+  <div class="pl" id="PL"></div>
+  <div class="os" id="OS"></div>
+  <div class="op" id="OP"><div class="ob" id="OB"></div></div>
+  <div class="note">📌 자동 인식이 틀릴 수 있어요. 아래 수치를 반드시 확인하고 틀리면 직접 수정해 주세요.</div>
+
+  <div class="divtxt">수치 직접 입력 / 확인</div>
+
+  <div class="stitle">🫘 신장 지표</div>
+  <div class="mg">
+    <div><label>CREA (크레아티닌)</label><div class="iu"><input type="number" id="vC" placeholder="0.0" step="0.1" min="0"><span class="ul">mg/dL</span></div><div class="range-hint">정상 범위: 0.5–1.8</div></div>
+    <div><label>BUN (혈중요소질소)</label><div class="iu"><input type="number" id="vB" placeholder="0" step="1" min="0"><span class="ul">mg/dL</span></div><div class="range-hint">정상 범위: 7–27</div></div>
+    <div><label>SDMA</label><div class="iu"><input type="number" id="vS" placeholder="0" step="1" min="0"><span class="ul">ug/dL</span></div><div class="range-hint">정상 범위: 1–14</div></div>
+    <div><label>인 P_Pi</label><div class="iu"><input type="number" id="vP" placeholder="0.0" step="0.1" min="0"><span class="ul">mg/dL</span></div><div class="range-hint">정상 범위: 2.4–6.4</div></div>
+  </div>
+
+  <div class="stitle">❤️ 심장 지표</div>
+  <div class="mg">
+    <div><label>proBNP</label><div class="iu"><input type="number" id="vBNP" placeholder="0" step="1" min="0"><span class="ul">pmol/L</span></div><div class="range-hint">정상 범위: 0–900</div></div>
+  </div>
+
+  <div class="stitle">🫀 간 지표</div>
+  <div class="mg">
+    <div><label>ALP (간수치)</label><div class="iu"><input type="number" id="vALP" placeholder="0" step="1" min="0"><span class="ul">U/L</span></div><div class="range-hint">정상 범위: 39–117</div></div>
+  </div>
+
+  <div class="stitle">🥩 영양·단백질 지표</div>
+  <div class="mg">
+    <div><label>ALB (알부민)</label><div class="iu"><input type="number" id="vALB" placeholder="0.0" step="0.1" min="0"><span class="ul">g/dL</span></div><div class="range-hint">정상 범위: 2.3–3.9</div></div>
+  </div>
+
+  <button class="btn" id="AB">🔍 지금 해독하기</button>
+</div>
+
+<div class="lo" id="LO">
+  <div class="spin">🐾</div>
+  <div class="lt" id="LT">사랑이가 열심히 읽고 있어요…</div>
+</div>
+<div class="rs" id="RS"></div>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+var RG={
+  CREA:{min:.5,max:1.8,cMin:1.8,dMin:3,unit:'mg/dL',name:'크레아티닌 (CREA)',org:'신장'},
+  BUN:{min:7,max:27,cMin:27,dMin:50,unit:'mg/dL',name:'BUN (혈중요소질소)',org:'신장'},
+  SDMA:{min:1,max:14,cMin:14,dMin:30,unit:'ug/dL',name:'SDMA (신장 조기)',org:'신장'},
+  PHOS:{min:2.4,max:6.4,cMin:6.4,dMin:8.5,unit:'mg/dL',name:'인 P_Pi',org:'신장'},
+  ProBNP:{min:0,max:900,cMin:900,dMin:1800,unit:'pmol/L',name:'proBNP (심장)',org:'심장'},
+  ALP:{min:39,max:117,cMin:117,dMin:300,unit:'U/L',name:'ALP (간수치)',org:'간'},
+  ALB:{min:2.3,max:3.9,cMin:2.3,dMin:1.8,unit:'g/dL',name:'ALB (알부민)',org:'영양'}
+};
+
+function g(id){return document.getElementById(id);}
+
+function gS(k,v){
+  var r=RG[k];
+  if(v===''||v===null||isNaN(parseFloat(v)))return 'u';
+  var n=parseFloat(v);
+  if(k==='ALB'){if(n<=r.dMin)return 'd';if(n<r.min||n>r.max)return 'c';return 'n';}
+  if(n>=r.dMin)return 'd';
+  if(n>=r.cMin||n<r.min)return 'c';
+  return 'n';
+}
+function sL(s){return{n:'정상',c:'주의',d:'위험',u:'미입력'}[s];}
+function sE(s){return{n:'✅',c:'⚠️',d:'🚨',u:'—'}[s];}
+
+var uz=g('UZ'),fi=g('FI');
+uz.addEventListener('dragover',function(e){e.preventDefault();uz.style.borderColor='#2A9D8F';uz.style.background='#E0F4F2';});
+uz.addEventListener('dragleave',function(){uz.style.borderColor='';uz.style.background='';});
+uz.addEventListener('drop',function(e){
+  e.preventDefault();uz.style.borderColor='';uz.style.background='';
+  var fs=[].slice.call(e.dataTransfer.files).filter(function(f){return f.type.indexOf('image/')===0;}).slice(0,5);
+  if(fs.length)processImages(fs);
+});
+uz.addEventListener('click',function(){fi.click();});
+fi.addEventListener('change',function(){
+  var fs=[].slice.call(fi.files).slice(0,5);
+  if(fs.length)processImages(fs);
+});
+
+function readURL(file){
+  return new Promise(function(res,rej){
+    var r=new FileReader();
+    r.onload=function(e){res(e.target.result);};
+    r.onerror=rej;
+    r.readAsDataURL(file);
+  });
+}
+
+function processImages(files){
+  var os=g('OS'),op=g('OP'),ob=g('OB'),pl=g('PL');
+  pl.innerHTML='';
+  os.textContent='📖 사랑이가 검사지 '+files.length+'장을 읽고 있어요…';
+  op.style.display='block';ob.style.width='5%';
+  var merged={CREA:null,BUN:null,SDMA:null,PHOS:null,ProBNP:null,ALP:null,ALB:null},found=[],i=0;
+  function next(){
+    if(i>=files.length){
+      ob.style.width='100%';
+      var idMap={CREA:'vC',BUN:'vB',SDMA:'vS',PHOS:'vP',ProBNP:'vBNP',ALP:'vALP',ALB:'vALB'};
+      for(var k in merged){if(merged[k]!==null)g(idMap[k]).value=merged[k];}
+      os.innerHTML=found.length>0
+        ?'✅ 인식 완료! <strong>'+found.join(', ')+'</strong> 수치를 찾았어요. 확인 후 틀리면 수정해 주세요.'
+        :'🔍 자동 인식이 어려워요. 아래 칸에 직접 입력해 주세요.';
+      setTimeout(function(){op.style.display='none';},1000);
+      return;
+    }
+    readURL(files[i]).then(function(url){
+      var img=document.createElement('img');img.src=url;pl.appendChild(img);
+      os.textContent='📖 '+(i+1)+'번째 사진 읽는 중… ('+(i+1)+'/'+files.length+')';
+      Tesseract.recognize(url,'kor+eng',{logger:function(m){
+        if(m.status==='recognizing text')
+          ob.style.width=Math.round((i/files.length)*90+(m.progress/files.length)*90+5)+'%';
+      }}).then(function(res){
+        var ex=extractNums(res.data.text);
+        var keys=['CREA','BUN','SDMA','PHOS','ProBNP','ALP','ALB'];
+        var labels={CREA:'CREA',BUN:'BUN',SDMA:'SDMA',PHOS:'인(P)',ProBNP:'proBNP',ALP:'ALP',ALB:'ALB'};
+        keys.forEach(function(k){
+          if(ex[k]!==null&&merged[k]===null){merged[k]=ex[k];found.push(labels[k]);}
+        });
+        i++;next();
+      }).catch(function(){i++;next();});
+    }).catch(function(){i++;next();});
+  }
+  next();
+}
+
+function extractNums(text){
+  var r={CREA:null,BUN:null,SDMA:null,PHOS:null,ProBNP:null,ALP:null,ALB:null};
+  var lines=text.split('\n');
+  for(var i=0;i<lines.length;i++){
+    var clean=lines[i].replace(/[,，]/g,'.').replace(/[^\w\d\.\s\-]/g,' ');
+    var nums=[],m,re=/(\d+\.?\d*)/g;
+    while((m=re.exec(clean))!==null)nums.push(parseFloat(m[1]));
+    var num=nums.length?nums[0]:NaN;
+    var l=clean.toLowerCase();
+    if((l.indexOf('crea')>=0||l.indexOf('creatinine')>=0)&&r.CREA===null&&!isNaN(num))r.CREA=num;
+    if((l.indexOf('bun')>=0||l.indexOf('urea')>=0)&&l.indexOf('ratio')<0&&r.BUN===null&&!isNaN(num))r.BUN=num;
+    if(l.indexOf('sdma')>=0&&r.SDMA===null&&!isNaN(num))r.SDMA=num;
+    if((l.indexOf('p_pi')>=0||/\bp\.?pi\b/.test(l)||/\bphos/.test(l)||l.indexOf('phosph')>=0)&&r.PHOS===null&&!isNaN(num))r.PHOS=num;
+    if((l.indexOf('probnp')>=0||l.indexOf('pro-bnp')>=0||(l.indexOf('bnp')>=0&&l.indexOf('bun')<0))&&r.ProBNP===null&&nums.length>0)r.ProBNP=nums.find(function(n){return n>10;})||num;
+    if((l.indexOf('p_alp')>=0||l.indexOf('alp')>=0||l.indexOf('alkp')>=0)&&r.ALP===null&&!isNaN(num))r.ALP=num;
+    if((l.indexOf('p_alb')>=0||l.indexOf('alb ')>=0||l.indexOf('albumin')>=0)&&r.ALB===null&&!isNaN(num))r.ALB=num;
+  }
+  return r;
+}
+
+// 사랑이 목소리 — 의학 내용 없이 SOS 신호만
+function voice(name,age,st){
+  var n=name||'우리 아이';
+  var dk=Object.keys(st).filter(function(k){return st[k]==='d';});
+  var ck=Object.keys(st).filter(function(k){return st[k]==='c';});
+  var nk=Object.keys(st).filter(function(k){return st[k]==='n';});
+  if(!dk.length&&!ck.length&&!nk.length)
+    return '수치를 입력하지 않으셨어요. 검사지를 올리거나 직접 입력해 주세요. 🐾';
+  if(dk.length)
+    return n+'아, 보호자님… 지금 내 몸이 빨간불을 보내고 있어요. 무섭겠지만 오늘 바로 병원 선생님께 연락해 주세요. 나 포기하지 않을게요. 🐾';
+  if(ck.length)
+    return n+'아, 몇 가지 수치가 조금 신경 쓰여요. 아직 괜찮지만 이번 주 안에 병원 선생님께 보여드리는 게 좋을 것 같아요. 늘 곁에서 봐줘서 고마워요. 🐾';
+  return n+'이 수치가 다 안정적이에요! 보호자님 덕분이에요. 앞으로도 이렇게 꼼꼼하게 봐주세요. 정말 고마워요. 🐾';
+}
+
+// 각 지표별 안내 — 의학 처방 없이 행동 안내만
+function advice(k,s,v){
+  var n=parseFloat(v);
+  if(s==='u')return null;
+  var msgs={
+    CREA:{
+      n:'신장 쪽 수치가 안정적이에요. 다음 검사 때도 확인해요.',
+      c:'수치가 조금 올라가 있어요. 이번 달 안에 병원 선생님께 보여드려요.',
+      d:'빨간불이에요! 오늘 바로 병원에 연락해요.'
+    },
+    BUN:{
+      n:'신장 수치가 안정적이에요. 다음 검사 때도 확인해요.',
+      c:'수치가 조금 신경 쓰여요. 이번 달 안에 병원 선생님께 보여드려요.',
+      d:'빨간불이에요! 오늘 바로 병원에 연락해요.'
+    },
+    SDMA:{
+      n:'신장 조기 지표가 안정적이에요. 계속 지켜봐요.',
+      c:'수치가 조금 올라가 있어요. 이번 달 안에 병원 선생님께 보여드려요.',
+      d:'빨간불이에요! 오늘 바로 병원에 연락해요.'
+    },
+    PHOS:{
+      n:'인 수치가 안정적이에요. 다음 검사 때도 확인해요.',
+      c:'수치가 조금 올라가 있어요. 이번 달 안에 병원 선생님께 보여드려요.',
+      d:'빨간불이에요! 오늘 바로 병원에 연락해요.'
+    },
+    ProBNP:{
+      n:'심장 수치가 안정적이에요. 계속 지켜봐요.',
+      c:'심장이 조금 신호를 보내고 있어요. 이번 주 안에 병원 선생님께 보여드려요.',
+      d:'빨간불이에요! 오늘 바로 병원에 연락해요.'
+    },
+    ALP:{
+      n:'간 수치가 안정적이에요. 다음 검사 때도 확인해요.',
+      c:'수치가 조금 올라가 있어요. 이번 달 안에 병원 선생님께 보여드려요.',
+      d:'빨간불이에요! 이번 주 안에 병원 선생님께 보여드려요.'
+    },
+    ALB:{
+      n:'단백질 수치가 안정적이에요. 계속 지켜봐요.',
+      c:'수치가 조금 낮아요. 이번 달 안에 병원 선생님께 보여드려요.',
+      d:'빨간불이에요! 이번 주 안에 병원 선생님께 보여드려요.'
+    }
+  };
+  var label={'n':'현재 수치: ','c':'현재 수치: ','d':'현재 수치: '};
+  return (label[s]||'')+n+' '+RG[k].unit+' — '+msgs[k][s];
+}
+
+g('AB').addEventListener('click',function(){
+  var dn=g('dN').value.trim(),da=g('dA').value.trim(),db=g('dB').value.trim();
+  var vals={CREA:g('vC').value,BUN:g('vB').value,SDMA:g('vS').value,PHOS:g('vP').value,ProBNP:g('vBNP').value,ALP:g('vALP').value,ALB:g('vALB').value};
+  var st={};
+  for(var k in vals)st[k]=gS(k,vals[k]);
+  if(!Object.keys(vals).some(function(k){return vals[k]!=='';})){
+    alert('수치를 하나 이상 입력해 주세요! 🐾');return;
+  }
+  g('IS').style.display='none';
+  g('LO').style.display='block';
+  var msgs=['사랑이가 열심히 읽고 있어요…','수치를 하나씩 살펴보고 있어요…','따뜻한 말로 정리하는 중이에요…'],mi=0;
+  var iv=setInterval(function(){g('LT').textContent=msgs[Math.min(++mi,2)];},900);
+  setTimeout(function(){
+    clearInterval(iv);
+    g('LO').style.display='none';
+    var vc=voice(dn,da,st);
+    var info=[dn&&('<strong>'+dn+'</strong>'),da&&(da+'세'),db].filter(Boolean).join(' · ');
+    var rs=g('RS');
+    rs.innerHTML='';
+
+    // 결과 헤더
+    var rh=document.createElement('div');
+    rh.className='rh';
+    rh.innerHTML='🐾 '+(info||'우리 아이')+' 혈액검사 결과';
+    rs.appendChild(rh);
+
+    // 사랑이 한마디
+    var sv=document.createElement('div');
+    sv.className='sv';
+    sv.innerHTML='<div class="spk">🐶 18살 사랑이의 한 마디</div>'+vc;
+    rs.appendChild(sv);
+
+    // 수치 카드 그리드
+    var mc=document.createElement('div');
+    mc.className='mc';
+    for(var k in RG){
+      var s=st[k],v=vals[k],r=RG[k];
+      var dv=(v!==''&&!isNaN(parseFloat(v)))?parseFloat(v).toFixed(['ALP','BUN','SDMA','ProBNP'].indexOf(k)>=0?0:1):'—';
+      var mi=document.createElement('div');
+      mi.className='mi '+s;
+      mi.innerHTML='<div class="mn">'+r.name+'</div>'
+        +'<div class="mv">'+dv+'</div>'
+        +'<div class="mr">정상: '+r.min+'–'+r.max+' '+r.unit+'</div>'
+        +'<span class="mt">'+sE(s)+' '+sL(s)+'</span>';
+      mc.appendChild(mi);
+    }
+    rs.appendChild(mc);
+
+    // 지표별 안내
+    for(var k in RG){
+      var s=st[k];
+      if(s==='u')continue;
+      var tx=advice(k,s,vals[k]);
+      if(!tx)continue;
+      var ac=document.createElement('div');
+      ac.className='ac '+s;
+      ac.innerHTML='<div class="at">'+sE(s)+' '+RG[k].name+'</div><div class="ab">'+tx+'</div>';
+      rs.appendChild(ac);
+    }
+
+    // 면책 고지
+    var disc=document.createElement('div');
+    disc.className='disc';
+    disc.textContent='⚠️ 이 결과는 수치를 쉽게 파악하기 위한 보조 도구예요. 의학적 진단·처방이 아니며, 모든 결과는 반드시 담당 수의사 선생님과 상담하세요.';
+    rs.appendChild(disc);
+
+    // 다시 검사 버튼
+    var rb=document.createElement('button');
+    rb.className='rb';
+    rb.textContent='다시 검사하기';
+    rb.addEventListener('click',function(){
+      g('IS').style.display='block';
+      rs.style.display='none';rs.innerHTML='';
+      g('PL').innerHTML='';g('OS').textContent='';g('OP').style.display='none';
+      ['vC','vB','vS','vP','vBNP','vALP','vALB'].forEach(function(id){g(id).value='';});
+      window.scrollTo({top:0,behavior:'smooth'});
+    });
+    DogActions.render(rs, { getText: function () { return bloodText(rs); }, againLabel: '다시 검사하기', onAgain: function () { rb.click(); } });
+
+    rs.style.display='block';
+    rs.scrollIntoView({behavior:'smooth',block:'start'});
+  },2000);
+});
+
+  function bloodText(rs) {
+    var T = DogActions.text, out = ['[강아지 혈액검사 해독기]', T(rs.querySelector('.rh')), ''];
+    Array.prototype.forEach.call(rs.querySelectorAll('.mi'), function (m) {
+      if (T(m.querySelector('.mv')) === '—') return;  // 입력하지 않은 수치는 뺀다
+      out.push('- ' + T(m.querySelector('.mn')) + ': ' + T(m.querySelector('.mv')) + ' (' + T(m.querySelector('.mt')) + ', ' + T(m.querySelector('.mr')) + ')');
+    });
+    var tips = rs.querySelectorAll('.ac');
+    if (tips.length) out.push('');
+    Array.prototype.forEach.call(tips, function (a) { out.push(T(a.querySelector('.at')) + ': ' + T(a.querySelector('.ab'))); });
+    out.push('', '보조 도구 결과예요. 진단·처방이 아니며 담당 수의사 선생님과 상담하세요.');
+    return out.join('\n');
+  }
+</script>
+<script src="actions.js"></script>
+<script src="../assets/maker.js"></script>
+</body>
+</html>
