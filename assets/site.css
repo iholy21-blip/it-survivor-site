@@ -150,13 +150,10 @@ html:has(.pop[open]){overflow:hidden}
   .sec h2{margin-top:32px}
   .points{grid-template-columns:1fr;margin-top:40px}
   .points li{padding:28px 24px 32px;font-size:18px}
-  /* 폰 카드: 사진 왼쪽, 글 오른쪽, 한 줄에 하나 */
-  .cards,.cards.four,.cards.five{grid-template-columns:1fr;gap:24px;margin-top:32px}
-  .card{display:grid;grid-template-columns:112px 1fr;gap:16px;align-items:start}
-  .card .name{margin-top:0;font-size:18px}
-  .card .desc{margin-top:4px;font-size:15px;line-height:1.5}
-  .card .tag{margin-top:6px;font-size:13px}
-  .card .go{margin-top:8px;font-size:14px}
+  /* 폰 카드: 사진 위, 글 아래, 한 줄에 하나 (PC와 같은 구조) */
+  .cards,.cards.four,.cards.five{grid-template-columns:1fr;gap:56px;margin-top:32px}
+  .card .name{margin-top:16px;font-size:22px}
+  .card .desc{font-size:17px}
   .pop{width:100vw;height:100dvh;grid-template-columns:1fr}
   .pop-img{position:static;height:auto;aspect-ratio:4/3}
   .pop-body{padding:28px 20px 48px}
