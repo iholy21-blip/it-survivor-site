@@ -190,3 +190,25 @@ html:has(.pop[open]){overflow:hidden}
   .group-head h3{font-size:22px}
   .points strong{font-size:19px}
 }
+
+/* 2026-11-05 움직임: 간단하고 자연스럽게 */
+.site-head{transition:box-shadow .3s}
+.site-head.scrolled{box-shadow:0 2px 14px rgba(0,0,0,.07)}
+.rv{opacity:0;transform:translateY(28px);transition:opacity .8s ease,transform .8s ease}
+.rv.in{opacity:1;transform:none}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+@keyframes slowzoom{from{transform:scale(1.07)}to{transform:scale(1)}}
+@keyframes fade{from{opacity:0}to{opacity:1}}
+@keyframes popin{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:none}}
+.hero-text>*{animation:rise .9s ease both}
+.hero-text>:nth-child(2){animation-delay:.12s}
+.hero-text>:nth-child(3){animation-delay:.24s}
+.hero{overflow:hidden}
+.hero-img{animation:slowzoom 2.6s ease-out both}
+.pop[open]{animation:popin .4s ease both}
+.pop[open]::backdrop{animation:fade .4s ease both}
+@media (prefers-reduced-motion:reduce){
+  .rv{opacity:1;transform:none;transition:none}
+  .hero-text>*,.hero-img,.pop[open],.pop[open]::backdrop{animation:none}
+  html{scroll-behavior:auto}
+}

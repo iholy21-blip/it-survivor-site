@@ -145,8 +145,11 @@ function list(arr, cls) {
     '<a class="to-top" href="#" aria-label="맨 위로"><svg viewBox="0 0 24 24"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>' +
     '<dialog class="pop" aria-label="앱 소개"></dialog>');
 
-  var top = document.querySelector('.to-top');
-  addEventListener('scroll', function () { top.classList.toggle('show', scrollY > 400); }, { passive: true });
+  var top = document.querySelector('.to-top'), head = document.querySelector('.site-head');
+  addEventListener('scroll', function () {
+    top.classList.toggle('show', scrollY > 400);
+    head.classList.toggle('scrolled', scrollY > 8);
+  }, { passive: true });
 
   document.querySelectorAll('[data-cards]').forEach(function (el) {
     el.innerHTML = APPS.filter(function (a) { return a.cat === el.dataset.cards && (!home || a.home); }).map(card).join('');
@@ -162,6 +165,19 @@ function list(arr, cls) {
     var q = new URLSearchParams(location.search).get('cat');
     pick(CATS[q] ? q : 'all');
   }
+
+  /* 스크롤하면 글과 카드가 아래에서 살짝 올라오며 나타난다. 움직임 줄이기 설정이면 CSS가 끈다. */
+  var rv = document.querySelectorAll('.page-head, .sec-head, .sec h2, .lead-p, .group-head, .card, .points li, .split, .dark .eyebrow, .dark h2, .dark .sub, .dark li, .contact .info, .contact .btn');
+  rv.forEach(function (el) {
+    el.classList.add('rv');
+    if (el.classList.contains('card') || el.tagName === 'LI') el.style.transitionDelay = (Array.prototype.indexOf.call(el.parentNode.children, el) % 3) * 90 + 'ms';
+  });
+  if ('IntersectionObserver' in window) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { rootMargin: '0px 0px -8% 0px' });
+    rv.forEach(function (el) { io.observe(el); });
+  } else rv.forEach(function (el) { el.classList.add('in'); });
 
   /* 노견 케어 소개 창(레이어 팝업). 주소 #app-아이디 로 열리고, 뒤로 가기·Esc·바깥·X로 닫혀요. */
   var pop = document.querySelector('.pop');
