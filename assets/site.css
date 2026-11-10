@@ -212,3 +212,7 @@ html:has(.pop[open]){overflow:hidden}
   .hero-text>*,.hero-img,.pop[open],.pop[open]::backdrop{animation:none}
   html{scroll-behavior:auto}
 }
+
+/* 2026-11-10 첫 화면 영상(PC만). 글자가 잘 읽히게 왼쪽만 옅은 흰빛 */
+.hero-video{animation:none;object-position:center 45%}
+.hero.has-video::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.4) 38%,rgba(255,255,255,0) 62%)}

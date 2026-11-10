@@ -166,6 +166,20 @@ function list(arr, cls) {
     pick(CATS[q] ? q : 'all');
   }
 
+  /* 첫 화면 영상: PC에서만, 움직임 줄이기 설정이 아닐 때 한 번 재생하고 마지막 장면에서 멈춘다. 폰은 사진 그대로. */
+  var heroImg = document.querySelector('.hero-img');
+  if (heroImg && matchMedia('(min-width: 769px)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    var vid = document.createElement('video');
+    vid.className = 'hero-img hero-video';
+    vid.muted = true; vid.playsInline = true; vid.preload = 'auto';
+    vid.setAttribute('muted', ''); vid.setAttribute('aria-hidden', 'true');
+    vid.poster = 'img/hero-start.jpg'; vid.src = 'img/hero.mp4';
+    vid.onerror = function () { vid.replaceWith(heroImg); heroImg.parentNode.classList.remove('has-video'); };
+    heroImg.replaceWith(vid);
+    vid.parentNode.classList.add('has-video');
+    var p = vid.play(); if (p && p.catch) p.catch(function () {});
+  }
+
   /* 스크롤하면 글과 카드가 아래에서 살짝 올라오며 나타난다. 움직임 줄이기 설정이면 CSS가 끈다. */
   var rv = document.querySelectorAll('.page-head, .sec-head, .sec h2, .lead-p, .group-head, .card, .points li, .split, .dark .eyebrow, .dark h2, .dark .sub, .dark li, .contact .info, .contact .btn');
   rv.forEach(function (el) {
