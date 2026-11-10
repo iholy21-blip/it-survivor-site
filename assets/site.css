@@ -213,6 +213,7 @@ html:has(.pop[open]){overflow:hidden}
   html{scroll-behavior:auto}
 }
 
-/* 2026-11-10 첫 화면 영상(PC만). 글자가 잘 읽히게 왼쪽만 옅은 흰빛 */
+/* 2026-11-10 첫 화면 영상. PC는 글자가 영상 위라 왼쪽만 옅은 흰빛, 폰은 글자가 위에 따로 있어 흰빛 없음 */
 .hero-video{animation:none;object-position:center 45%}
-.hero.has-video::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.4) 38%,rgba(255,255,255,0) 62%)}
+@media (max-width:768px){.hero-video{object-position:72% center}}
+@media (min-width:769px){.hero.has-video::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(90deg,rgba(255,255,255,.62) 0%,rgba(255,255,255,.4) 38%,rgba(255,255,255,0) 62%)}}
