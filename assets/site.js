@@ -173,7 +173,7 @@ function list(arr, cls) {
     vid.className = 'hero-img hero-video';
     vid.muted = true; vid.playsInline = true; vid.loop = true; vid.preload = 'auto';
     vid.setAttribute('muted', ''); vid.setAttribute('aria-hidden', 'true');
-    vid.poster = 'img/hero-start.jpg'; vid.src = 'img/hero.mp4';
+    vid.poster = 'img/hero-start.jpg?v=3'; vid.src = 'img/hero.mp4?v=3'; // 영상을 바꾸면 v 숫자를 올린다(브라우저가 옛 영상을 기억하지 않게)
     vid.onerror = function () { vid.replaceWith(heroImg); heroImg.parentNode.classList.remove('has-video'); };
     heroImg.replaceWith(vid);
     vid.parentNode.classList.add('has-video');
