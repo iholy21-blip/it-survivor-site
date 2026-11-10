@@ -166,12 +166,12 @@ function list(arr, cls) {
     pick(CATS[q] ? q : 'all');
   }
 
-  /* 첫 화면 영상: PC에서만, 움직임 줄이기 설정이 아닐 때 한 번 재생하고 마지막 장면에서 멈춘다. 폰은 사진 그대로. */
+  /* 첫 화면 영상: PC에서만, 움직임 줄이기 설정이 아닐 때 커튼이 흔들리는 영상을 계속 반복한다. 폰은 사진 그대로. */
   var heroImg = document.querySelector('.hero-img');
   if (heroImg && matchMedia('(min-width: 769px)').matches && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
     var vid = document.createElement('video');
     vid.className = 'hero-img hero-video';
-    vid.muted = true; vid.playsInline = true; vid.preload = 'auto';
+    vid.muted = true; vid.playsInline = true; vid.loop = true; vid.preload = 'auto';
     vid.setAttribute('muted', ''); vid.setAttribute('aria-hidden', 'true');
     vid.poster = 'img/hero-start.jpg'; vid.src = 'img/hero.mp4';
     vid.onerror = function () { vid.replaceWith(heroImg); heroImg.parentNode.classList.remove('has-video'); };
